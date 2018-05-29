@@ -46,9 +46,7 @@
 		<Unit filename="../../include/base/Base.h" />
 		<Unit filename="../../include/base/Config.h" />
 		<Unit filename="../../include/base/FileSystem.h" />
-		<Unit filename="../../include/base/FileSystemLinuxImpl.h" />
-		<Unit filename="../../include/base/FileSystemMacImpl.h" />
-		<Unit filename="../../include/base/FileSystemWinImpl.h" />
+		<Unit filename="../../include/base/FileSystemLinuxImpl.hpp" />
 		<Unit filename="../../include/base/Gcd.h" />
 		<Unit filename="../../include/base/ILogWriter.h" />
 		<Unit filename="../../include/base/LogMgr.h" />

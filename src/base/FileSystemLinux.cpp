@@ -16,8 +16,8 @@
 #include <libproc.h>
 #endif
 
-using namespace gird;
-using namespace gird::util;
+using namespace grid;
+using namespace grid::util;
 
 tstring FileSystem::GetCurrentPath()
 {

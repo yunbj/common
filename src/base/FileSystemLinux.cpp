@@ -16,8 +16,8 @@
 #include <libproc.h>
 #endif
 
-using namespace nova;
-using namespace nova::util;
+using namespace gird;
+using namespace gird::util;
 
 tstring FileSystem::GetCurrentPath()
 {

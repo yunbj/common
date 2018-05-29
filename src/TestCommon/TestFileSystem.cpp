@@ -15,8 +15,8 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 using namespace std;
-using namespace nova;
-using namespace nova::util;
+using namespace grid;
+using namespace grid::util;
 
 
 static void print_dir(string path)

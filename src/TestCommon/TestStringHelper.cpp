@@ -6,7 +6,7 @@
 #include <assert.h>
 
 using namespace std;
-using namespace nova;
+using namespace grid;
 using namespace util;
 
 TestStringHelper::TestStringHelper()

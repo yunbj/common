@@ -12,7 +12,7 @@
 #define MAX_PATH    (1024)
 #endif // MAX_PATH
 
-namespace nova
+namespace grid
 {
     namespace util
     {

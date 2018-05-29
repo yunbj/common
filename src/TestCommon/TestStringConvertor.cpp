@@ -3,8 +3,8 @@
 #include <base/StringConvertor.h>
 #include <assert.h>
 
-using namespace nova;
-using namespace nova::util;
+using namespace grid;
+using namespace grid::util;
 
 using namespace std;
 

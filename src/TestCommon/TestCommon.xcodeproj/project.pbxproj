@@ -13,13 +13,13 @@
 		4A1F281E1EDEB4F700A8BC15 /* LogMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F28151EDEB4F700A8BC15 /* LogMgr.cpp */; };
 		4A1F281F1EDEB4F700A8BC15 /* PidFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F28161EDEB4F700A8BC15 /* PidFile.cpp */; };
 		4A1F28201EDEB4F700A8BC15 /* RunLoopForSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F28171EDEB4F700A8BC15 /* RunLoopForSignal.cpp */; };
-		4A1F28211EDEB4F700A8BC15 /* StringConvertorLinux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F28181EDEB4F700A8BC15 /* StringConvertorLinux.cpp */; };
 		4A1F28221EDEB4F700A8BC15 /* StringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F28191EDEB4F700A8BC15 /* StringHelper.cpp */; };
 		4A263FC11EC59DC9000F5C78 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBA1EC59DC9000F5C78 /* main.cpp */; };
 		4A263FC21EC59DC9000F5C78 /* TestFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBB1EC59DC9000F5C78 /* TestFileSystem.cpp */; };
 		4A263FC31EC59DC9000F5C78 /* TestStringConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBD1EC59DC9000F5C78 /* TestStringConvertor.cpp */; };
 		4A263FC41EC59DC9000F5C78 /* TestStringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBF1EC59DC9000F5C78 /* TestStringHelper.cpp */; };
-		4A43BC931EF1066C006F9184 /* FileSystemLinux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A43BC921EF1066C006F9184 /* FileSystemLinux.cpp */; };
+		4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */; };
+		4A6A3A3A20BD40D900AEF318 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,7 +41,6 @@
 		4A1F28151EDEB4F700A8BC15 /* LogMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogMgr.cpp; path = ../../base/LogMgr.cpp; sourceTree = "<group>"; };
 		4A1F28161EDEB4F700A8BC15 /* PidFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PidFile.cpp; path = ../../base/PidFile.cpp; sourceTree = "<group>"; };
 		4A1F28171EDEB4F700A8BC15 /* RunLoopForSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RunLoopForSignal.cpp; path = ../../base/RunLoopForSignal.cpp; sourceTree = "<group>"; };
-		4A1F28181EDEB4F700A8BC15 /* StringConvertorLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StringConvertorLinux.cpp; path = ../../base/StringConvertorLinux.cpp; sourceTree = "<group>"; };
 		4A1F28191EDEB4F700A8BC15 /* StringHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StringHelper.cpp; path = ../../base/StringHelper.cpp; sourceTree = "<group>"; };
 		4A263FB01EC59D7D000F5C78 /* TestCommon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestCommon; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A263FBA1EC59DC9000F5C78 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
@@ -51,7 +50,8 @@
 		4A263FBE1EC59DC9000F5C78 /* TestStringConvertor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestStringConvertor.h; sourceTree = SOURCE_ROOT; };
 		4A263FBF1EC59DC9000F5C78 /* TestStringHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestStringHelper.cpp; sourceTree = SOURCE_ROOT; };
 		4A263FC01EC59DC9000F5C78 /* TestStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestStringHelper.h; sourceTree = SOURCE_ROOT; };
-		4A43BC921EF1066C006F9184 /* FileSystemLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystemLinux.cpp; path = ../../base/FileSystemLinux.cpp; sourceTree = "<group>"; };
+		4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StringConvertor.cpp; path = ../../base/StringConvertor.cpp; sourceTree = "<group>"; };
+		4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../../base/FileSystem.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,14 +107,14 @@
 		4A263FF71EC5A2FC000F5C78 /* base */ = {
 			isa = PBXGroup;
 			children = (
-				4A43BC921EF1066C006F9184 /* FileSystemLinux.cpp */,
+				4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */,
+				4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */,
 				4A1F28111EDEB4F700A8BC15 /* Base.cpp */,
 				4A1F28121EDEB4F700A8BC15 /* Config.cpp */,
 				4A1F28141EDEB4F700A8BC15 /* Gcd.cpp */,
 				4A1F28151EDEB4F700A8BC15 /* LogMgr.cpp */,
 				4A1F28161EDEB4F700A8BC15 /* PidFile.cpp */,
 				4A1F28171EDEB4F700A8BC15 /* RunLoopForSignal.cpp */,
-				4A1F28181EDEB4F700A8BC15 /* StringConvertorLinux.cpp */,
 				4A1F28191EDEB4F700A8BC15 /* StringHelper.cpp */,
 			);
 			name = base;
@@ -178,11 +178,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A1F28201EDEB4F700A8BC15 /* RunLoopForSignal.cpp in Sources */,
+				4A6A3A3A20BD40D900AEF318 /* FileSystem.cpp in Sources */,
+				4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */,
 				4A263FC41EC59DC9000F5C78 /* TestStringHelper.cpp in Sources */,
-				4A1F28211EDEB4F700A8BC15 /* StringConvertorLinux.cpp in Sources */,
 				4A263FC21EC59DC9000F5C78 /* TestFileSystem.cpp in Sources */,
 				4A263FC31EC59DC9000F5C78 /* TestStringConvertor.cpp in Sources */,
-				4A43BC931EF1066C006F9184 /* FileSystemLinux.cpp in Sources */,
 				4A1F28221EDEB4F700A8BC15 /* StringHelper.cpp in Sources */,
 				4A1F281B1EDEB4F700A8BC15 /* Config.cpp in Sources */,
 				4A263FC11EC59DC9000F5C78 /* main.cpp in Sources */,

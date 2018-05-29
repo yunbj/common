@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TestCommon" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/TestCommon" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Debug" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++1z" />
+					<Add option="-g" />
+					<Add directory="../../include" />
+					<Add directory="src/TestCommon" />
+					<Add directory="prototype/src/encodersvr" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/TestCommon" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="src/TestCommon" />
+					<Add directory="prototype/src/encodersvr" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Linker>
+			<Add option="-lpthread" />
+			<Add option="-lstdc++fs" />
+		</Linker>
+		<Unit filename="../../include/base/Base.h" />
+		<Unit filename="../../include/base/Config.h" />
+		<Unit filename="../../include/base/FileSystem.h" />
+		<Unit filename="../../include/base/FileSystemLinuxImpl.h" />
+		<Unit filename="../../include/base/FileSystemMacImpl.h" />
+		<Unit filename="../../include/base/FileSystemWinImpl.h" />
+		<Unit filename="../../include/base/Gcd.h" />
+		<Unit filename="../../include/base/ILogWriter.h" />
+		<Unit filename="../../include/base/LogMgr.h" />
+		<Unit filename="../../include/base/RunLoopForSignal.h" />
+		<Unit filename="../../include/base/StringConvertor.h" />
+		<Unit filename="../../include/base/StringHelper.h" />
+		<Unit filename="../../include/base/json.hpp" />
+		<Unit filename="../base/Base.cpp" />
+		<Unit filename="../base/Config.cpp" />
+		<Unit filename="../base/FileSystem.cpp" />
+		<Unit filename="../base/Gcd.cpp" />
+		<Unit filename="../base/LogMgr.cpp" />
+		<Unit filename="../base/RunLoopForSignal.cpp" />
+		<Unit filename="../base/StringConvertor.cpp" />
+		<Unit filename="../base/StringHelper.cpp" />
+		<Unit filename="TestFileSystem.cpp" />
+		<Unit filename="TestFileSystem.h" />
+		<Unit filename="TestStringConvertor.cpp" />
+		<Unit filename="TestStringConvertor.h" />
+		<Unit filename="TestStringHelper.cpp" />
+		<Unit filename="TestStringHelper.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

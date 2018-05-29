@@ -1,2 +1,2 @@
 # common
-common class
+grid common base class

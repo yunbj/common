@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     TestFileSystem fs;
     fs.DoTest();
 
-    wprintf(L"Teset Complete....\n");
+    wprintf(L"Test set Complete....\n");
 
     return 0;
 }

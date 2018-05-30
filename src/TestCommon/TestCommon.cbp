@@ -56,7 +56,7 @@
 		<Unit filename="../../include/base/json.hpp" />
 		<Unit filename="../base/Base.cpp" />
 		<Unit filename="../base/Config.cpp" />
-		<Unit filename="../base/FileSystem.cpp" />
+		<Unit filename="../base/FileSystemLinux.cpp" />
 		<Unit filename="../base/Gcd.cpp" />
 		<Unit filename="../base/LogMgr.cpp" />
 		<Unit filename="../base/RunLoopForSignal.cpp" />

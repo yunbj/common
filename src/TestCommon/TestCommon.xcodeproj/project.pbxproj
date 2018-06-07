@@ -19,7 +19,8 @@
 		4A263FC31EC59DC9000F5C78 /* TestStringConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBD1EC59DC9000F5C78 /* TestStringConvertor.cpp */; };
 		4A263FC41EC59DC9000F5C78 /* TestStringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A263FBF1EC59DC9000F5C78 /* TestStringHelper.cpp */; };
 		4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */; };
-		4A6A3A3A20BD40D900AEF318 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */; };
+		4AFE7FFA20C8F7C8005B0EDC /* FileSystemLinux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */; };
+		4AFE7FFD20C8F803005B0EDC /* TestGcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,7 +52,9 @@
 		4A263FBF1EC59DC9000F5C78 /* TestStringHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestStringHelper.cpp; sourceTree = SOURCE_ROOT; };
 		4A263FC01EC59DC9000F5C78 /* TestStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestStringHelper.h; sourceTree = SOURCE_ROOT; };
 		4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StringConvertor.cpp; path = ../../base/StringConvertor.cpp; sourceTree = "<group>"; };
-		4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../../base/FileSystem.cpp; sourceTree = "<group>"; };
+		4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystemLinux.cpp; path = ../../base/FileSystemLinux.cpp; sourceTree = "<group>"; };
+		4AFE7FFB20C8F803005B0EDC /* TestGcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGcd.h; sourceTree = SOURCE_ROOT; };
+		4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestGcd.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 		4A263FC51EC59DDB000F5C78 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */,
+				4AFE7FFB20C8F803005B0EDC /* TestGcd.h */,
 				4A263FBB1EC59DC9000F5C78 /* TestFileSystem.cpp */,
 				4A263FBC1EC59DC9000F5C78 /* TestFileSystem.h */,
 				4A263FBD1EC59DC9000F5C78 /* TestStringConvertor.cpp */,
@@ -107,7 +112,7 @@
 		4A263FF71EC5A2FC000F5C78 /* base */ = {
 			isa = PBXGroup;
 			children = (
-				4A6A3A3920BD40D900AEF318 /* FileSystem.cpp */,
+				4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */,
 				4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */,
 				4A1F28111EDEB4F700A8BC15 /* Base.cpp */,
 				4A1F28121EDEB4F700A8BC15 /* Config.cpp */,
@@ -178,13 +183,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A1F28201EDEB4F700A8BC15 /* RunLoopForSignal.cpp in Sources */,
-				4A6A3A3A20BD40D900AEF318 /* FileSystem.cpp in Sources */,
 				4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */,
 				4A263FC41EC59DC9000F5C78 /* TestStringHelper.cpp in Sources */,
 				4A263FC21EC59DC9000F5C78 /* TestFileSystem.cpp in Sources */,
 				4A263FC31EC59DC9000F5C78 /* TestStringConvertor.cpp in Sources */,
+				4AFE7FFA20C8F7C8005B0EDC /* FileSystemLinux.cpp in Sources */,
 				4A1F28221EDEB4F700A8BC15 /* StringHelper.cpp in Sources */,
 				4A1F281B1EDEB4F700A8BC15 /* Config.cpp in Sources */,
+				4AFE7FFD20C8F803005B0EDC /* TestGcd.cpp in Sources */,
 				4A263FC11EC59DC9000F5C78 /* main.cpp in Sources */,
 				4A1F281E1EDEB4F700A8BC15 /* LogMgr.cpp in Sources */,
 				4A1F281D1EDEB4F700A8BC15 /* Gcd.cpp in Sources */,

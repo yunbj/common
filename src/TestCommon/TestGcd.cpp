@@ -47,12 +47,16 @@ public:
 		{
 			assert(!"called copy assign");
 		}
+        
+        return *this;
 	}
 	TestClass& operator= (TestClass&& rhs)
 	{
 		value = rhs.value;
 		rhs.value = 0;
 		printf(">>>> move assign\n");
+        
+        return *this;
 	}
 
 	int value = 0;

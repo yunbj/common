@@ -64,6 +64,8 @@
 		<Unit filename="../base/StringHelper.cpp" />
 		<Unit filename="TestFileSystem.cpp" />
 		<Unit filename="TestFileSystem.h" />
+		<Unit filename="TestGcd.cpp" />
+		<Unit filename="TestGcd.h" />
 		<Unit filename="TestStringConvertor.cpp" />
 		<Unit filename="TestStringConvertor.h" />
 		<Unit filename="TestStringHelper.cpp" />

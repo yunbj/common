@@ -23,9 +23,9 @@ void TestStringConvertor::DoTest()
 
 // for hangul print.
 #if defined(WIN32) || defined(_WIN64) || defined(__APPLE__)
-    setlocale(LC_ALL, "ko_KR.UTF-8");
+    auto old_local = setlocale(LC_ALL, "ko_KR.UTF-8");
 #else
-    std::setlocale(LC_ALL,"");
+    auto old_local = std::setlocale(LC_ALL,"");
 #endif
 
     wprintf(L"\n===== [ start test string convertor ] =====\n");
@@ -64,4 +64,11 @@ void TestStringConvertor::DoTest()
 	string utf8str3 = StringConvertor::WideCharToUTF8(wstr3);
 	assert(utf8str == utf8str3);
 	wprintf(L"[wstr_to_utf8] utf8str3 : %s\n", utf8str3.c_str());
+
+#if defined(WIN32) || defined(_WIN64) || defined(__APPLE__)
+    setlocale(LC_ALL, old_local);
+#else
+    std::setlocale(LC_ALL,old_local);
+#endif
+
 }

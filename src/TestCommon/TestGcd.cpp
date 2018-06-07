@@ -5,6 +5,8 @@
 #include <atomic>
 #include <assert.h>
 
+#include <thread>
+
 #include <base/Gcd.h>
 
 using namespace std;
@@ -61,7 +63,7 @@ class CallbackClass : public enable_shared_from_this<CallbackClass>
 {
 	//
 public:
-	
+
 	void call(int value)
 	{
 		printf(">>>> called  method function callback.(value : %d)\n", value);
@@ -186,7 +188,7 @@ TestGcd::~TestGcd()
 void TestGcd::DoTest()
 {
 	printf("============= start Gcd test ===============\n");
-	
+
 	_gcd->Init();
 
 	_TestMoveValue(_gcd);

@@ -9,6 +9,15 @@ using namespace std;
 using namespace grid;
 using namespace util;
 
+#if !defined(trpintf)
+#if defined(UNICODE)
+#define tprintf	wprintf
+#else // defined(UNICODE)
+#define tprintf	printf
+#endif // defined(UNICODE)
+#endif // !defined(trpintf)
+
+
 TestStringHelper::TestStringHelper()
 {
     //ctor
@@ -21,7 +30,7 @@ TestStringHelper::~TestStringHelper()
 
 void TestStringHelper::DoTest()
 {
-    wprintf(L"\n===== [ start test string helper ] =====\n");
+	tprintf(_T("\n===== [ start test string helper ] =====\n"));
     {
         // check format string
         tstring strOrg = _T("default string.");
@@ -31,7 +40,7 @@ void TestStringHelper::DoTest()
 
         assert(strNew == strResult);
 
-        wprintf(L"new : %s, expected result : %s\n", strNew.c_str(), strResult.c_str());
+		tprintf(_T("new : %s, expected result : %s\n"), strNew.c_str(), strResult.c_str());
     }
     {
         tstring strOrg = _T("default string.");
@@ -41,7 +50,7 @@ void TestStringHelper::DoTest()
         APPEND_FORMAT(strNew, _T("%s"), strAppend.c_str());
         tstring strResult = strOrg + strAppend;
 
-        wprintf(L"new : %s, expected result : %s\n", strNew.c_str(), strResult.c_str());
+		tprintf(_T("new : %s, expected result : %s\n"), strNew.c_str(), strResult.c_str());
 
         assert(strNew == strResult);
     }
@@ -51,12 +60,12 @@ void TestStringHelper::DoTest()
         util::StringHelper::LTrim(strTrim, _T(". /"));
         assert(strTrim == _T("ts"));
 
-        wprintf(L"org : %s, trim : %s\n", strOrg.c_str(), strTrim.c_str());
+		tprintf(_T("org : %s, trim : %s\n"), strOrg.c_str(), strTrim.c_str());
 
 
         util::StringHelper::LTrim(strTrim, _T(". /"));
         assert(strTrim == _T("ts"));
-        wprintf(L"org : %s, trim : %s\n", strOrg.c_str(), strTrim.c_str());
+		tprintf(_T("org : %s, trim : %s\n"), strOrg.c_str(), strTrim.c_str());
     }
 
 }

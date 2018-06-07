@@ -32,9 +32,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCommon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\base\Base.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -47,11 +44,26 @@
     <ClCompile Include="..\base\LogMgr.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\base\RunLoopForSignal.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\base\StringHelper.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\FileSystem.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\StringConvertor.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGcd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestStringHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

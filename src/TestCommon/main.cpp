@@ -1,11 +1,21 @@
 #include <iostream>
 
+#include <base/LogMgr.h>
+
+#include <ctime>
+#include <thread>
+#include <chrono>
+
+#if !defined(_WIN32)
 #include "TestStringConvertor.h"
+#endif
+
 #include "TestFileSystem.h"
 #include "TestStringHelper.h"
+#include "TestGcd.h"
 
-
-#include <getopt.h>
+using namespace grid;
+using namespace std::chrono_literals;
 
 void help(char *argv)
 {
@@ -15,16 +25,39 @@ void help(char *argv)
 
 int main(int argc, char* argv[])
 {
-    TestStringConvertor sc;
-    sc.DoTest();
+	INIT_LOG_MGR(log::LOG_LEVEL::LOG_DEBUG, log::LOG_WRITER_TYPE::LOG_WRITER_ALL);
 
-    TestStringHelper sh;
-    sh.DoTest();
+#if !defined(_WIN32)
+	TestStringConvertor sc;
+	sc.DoTest();
+#endif
 
-    TestFileSystem fs;
-    fs.DoTest();
+	TestStringHelper sh;
+	sh.DoTest();
 
-    wprintf(L"Test set Complete....\n");
+	TestFileSystem fs;
+	fs.DoTest();
+
+	TestGcd tg;
+	tg.DoTest();
+
+
+	/// test log print time
+	for (auto i = 0; i < 10; ++i)
+	{
+		std::this_thread::sleep_for(100ms);
+
+		DEBUG_LOG(_T("sleep 100ms."));
+	}
+
+	//getchar();
+
+	UNINIT_LOG_MGR();
+
+
+    std::cout << "Test set Complete....\n";
+
+//	getchar();
 
     return 0;
 }

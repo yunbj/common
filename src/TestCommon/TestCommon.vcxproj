@@ -42,7 +42,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -159,12 +159,16 @@
   <ItemGroup>
     <ClCompile Include="..\base\Base.cpp" />
     <ClCompile Include="..\base\Config.cpp" />
+    <ClCompile Include="..\base\FileSystem.cpp" />
     <ClCompile Include="..\base\Gcd.cpp" />
     <ClCompile Include="..\base\LogMgr.cpp" />
-    <ClCompile Include="..\base\RunLoopForSignal.cpp" />
+    <ClCompile Include="..\base\StringConvertor.cpp" />
     <ClCompile Include="..\base\StringHelper.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TestCommon.cpp" />
+    <ClCompile Include="TestFileSystem.cpp" />
+    <ClCompile Include="TestGcd.cpp" />
+    <ClCompile Include="TestStringHelper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,7 +3,7 @@
 #include <base/FileSystem.h>
 #include <base/StringHelper.h>
 
-#include <unistd.h> // getpid()
+//#include <unistd.h> // getpid()
 #include <sys/stat.h>
 #include <fstream>
 #include <iostream>
@@ -18,20 +18,28 @@ using namespace std;
 using namespace grid;
 using namespace grid::util;
 
+#if !defined(trpintf)
+#if defined(UNICODE)
+#define tprintf	wprintf
+#else // defined(UNICODE)
+#define tprintf	printf
+#endif // defined(UNICODE)
+#endif // !defined(trpintf)
+
 
 static void print_dir(string path)
 {
 #if !defined(__APPLE__)
-    wprintf(L"===== [ dir list ] =====\n");
+	tprintf(_T("===== [ dir list ] =====\n"));
 
     for(auto& p: fs::recursive_directory_iterator(path))
     {
         if(fs::is_directory(p))
         {
-            std::wprintf(L"%s\n", p.path().string().c_str());
+			tprintf(_T("%s\n"), p.path().string().c_str());
         }
     }
-    wprintf(L"========================\n");
+	tprintf(_T("========================\n"));
 #endif
 }
 
@@ -58,46 +66,46 @@ TestFileSystem::~TestFileSystem()
 
 void TestFileSystem::DoTest()
 {
-     wprintf(L"\n===== [ start test file system ] =====\n");
+    tprintf(_T("\n===== [ start test file system ] =====\n"));
 
     string curPath = FileSystem::GetCurrentPath();
 
-    wprintf(L"GetCurrentPath() : %s\n", FileSystem::GetCurrentPath().c_str());
-	wprintf(L"GetFileName() : %s\n", FileSystem::GetFileName().c_str());
-    wprintf(L"GetCurrentProcessId() : %u\n", FileSystem::GetCurrentProcessId());
-   	wprintf(L"GetParentProcessId() : %u\n", FileSystem::GetParentProcessId());
-	wprintf(L"GetProcessPath(parent) : %s\n", FileSystem::GetProcessPath(FileSystem::GetParentProcessId()).c_str() );
+	tprintf(_T("GetCurrentPath() : %s\n"), FileSystem::GetCurrentPath().c_str());
+	tprintf(_T("GetFileName() : %s\n"), FileSystem::GetFileName().c_str());
+	tprintf(_T("GetCurrentProcessId() : %u\n"), FileSystem::GetCurrentProcessId());
+	tprintf(_T("GetParentProcessId() : %u\n"), FileSystem::GetParentProcessId());
+	tprintf(_T("GetProcessPath(parent) : %s\n"), FileSystem::GetProcessPath(FileSystem::GetParentProcessId()).c_str() );
 
     string newPath  = curPath + "/tmp/a";
-    wprintf(L"CreateDir(%s, ret : %d)\n", newPath.c_str(), FileSystem::CreateDir(newPath) );
+	tprintf(_T("CreateDir(%s, ret : %d)\n"), newPath.c_str(), FileSystem::CreateDir(newPath) );
 
     print_dir(curPath);
 
 
     string newFilePath = newPath + "/file1.txt";
     std::ofstream(newFilePath.c_str());
-    wprintf(L"Create file. (%s)\n", newFilePath.c_str());
+    tprintf(_T("Create file. (%s)\n"), newFilePath.c_str());
 
     newPath = curPath + "/tmp";
-    wprintf(L"DeleteDir(%s, ret : %d)\n", newPath.c_str(), FileSystem::DeleteDir(newPath) );
+    tprintf(_T("DeleteDir(%s, ret : %d)\n"), newPath.c_str(), FileSystem::DeleteDir(newPath) );
     assert(!isDirExist(newPath));
 
     print_dir(curPath);
 
-    FileSystem::DeleteDir(curPath + "/temp0");
-    bool bret = FileSystem::CreateDir(curPath + "/temp0/temp1/temp2/temp3/temp4");
+    FileSystem::DeleteDir(curPath + _T("/temp0"));
+    bool bret = FileSystem::CreateDir(curPath + _T("/temp0/temp1/temp2/temp3/temp4"));
     assert(bret);
 
-    assert(isDirExist(curPath + "/temp0"));
-    assert(isDirExist(curPath + "/temp0/temp1"));
-    assert(isDirExist(curPath + "/temp0/temp1/temp2"));
-    assert(isDirExist(curPath + "/temp0/temp1/temp2/temp3"));
-    assert(isDirExist(curPath + "/temp0/temp1/temp2/temp3/temp4"));
+    assert(isDirExist(curPath + _T("/temp0")));
+    assert(isDirExist(curPath + _T("/temp0/temp1")));
+    assert(isDirExist(curPath + _T("/temp0/temp1/temp2")));
+    assert(isDirExist(curPath + _T("/temp0/temp1/temp2/temp3")));
+    assert(isDirExist(curPath + _T("/temp0/temp1/temp2/temp3/temp4")));
 
     // 이미 존재하는 경우 true를 리턴하는가?
     //bret = FileSystem::CreateDir(curPath + "/temp0/temp1/temp2/temp3/temp4");
     //assert(bret);
 
-    FileSystem::DeleteDir(curPath + "/temp0");
-    assert(!isDirExist(curPath + "/temp0"));
+    FileSystem::DeleteDir(curPath + _T("/temp0"));
+    assert(!isDirExist(curPath + _T("/temp0")));
 }

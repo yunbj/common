@@ -82,11 +82,11 @@ namespace grid
 		int DestroyTimer(uint32_t id);
 
 	private:
-		int _DispatchAsync(const FnType& fn);
+		int _DispatchAsync(FnType&& fn);
 
-		uint32_t _CreateTimer(const DurationType& interval, bool repeat, const FnType& fn);
+		uint32_t _CreateTimer(const DurationType& interval, bool repeat, FnType&& fn);
 
-        uint32_t _CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, const FnType& fn);
+		uint32_t _CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, FnType&& fn);
         
 		std::unique_lock<MutexType> _AcquireSyncLock();
 

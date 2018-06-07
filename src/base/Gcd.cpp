@@ -5,7 +5,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <cassert>
-
+#include <ctime>
 
 namespace grid
 {
@@ -25,11 +25,11 @@ namespace grid
 
 		std::size_t GetNumOfPendings() const;
 
-		int DispatchAsync(const FnType& fn);
+		int DispatchAsync(FnType&& fn);
 
-		uint32_t CreateTimer(const DurationType& interval, bool repeat, const FnType& fn);
+		uint32_t CreateTimer(const DurationType& interval, bool repeat, FnType&& fn);
 
-        uint32_t CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, const FnType& fn);
+		uint32_t CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, FnType&& fn);
         
 		int DestroyTimer(uint32_t id);
 
@@ -61,11 +61,11 @@ namespace grid
 				, _fn()
 			{}
 
-			_TimerValue(uint32_t id, bool repeat, const Gcd::DurationType& interval, const Gcd::FnType& fn)
+			_TimerValue(uint32_t id, bool repeat, const Gcd::DurationType& interval, Gcd::FnType&& fn)
 				: _id(id)
 				, _repeat(repeat)
 				, _interval(interval)
-				, _fn(fn)
+				, _fn(std::move(fn))
 			{}
 		};
 
@@ -127,7 +127,7 @@ namespace grid
 		return _q.size();
 	}
 
-	int Gcd::_Impl::DispatchAsync(const FnType& fn)
+	int Gcd::_Impl::DispatchAsync(FnType&& fn)
 	{
 		if (!_bRunning)
 		{
@@ -136,14 +136,15 @@ namespace grid
 
 		{
 			std::unique_lock<MutexType> lock(_mtxForThread);
-			_q.emplace_back(fn);
+			_q.emplace_back(std::move(fn));
 		}
 
 		_cvEvent.notify_one();
 		return 0;
 	}
 
-	uint32_t Gcd::_Impl::CreateTimer(const DurationType& interval, bool repeat, const FnType& fn)
+	
+	uint32_t Gcd::_Impl::CreateTimer(const DurationType& interval, bool repeat, FnType&& fn)
 	{
 		/*
 		if (!_bRunning)
@@ -160,14 +161,14 @@ namespace grid
 			std::unique_lock<MutexType> lock(_mtxForThread);
 
 			id = _nNextTimerId++;
-			_timers.insert(std::make_pair(expiredAt, _TimerValue(id, repeat, interval, fn)));
+			_timers.insert(std::make_pair(expiredAt, _TimerValue(id, repeat, interval, std::move(fn))));
 		}
 
 		_cvEvent.notify_one();
 		return id;
 	}
 
-    uint32_t Gcd::_Impl::CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, const FnType& fn)
+    uint32_t Gcd::_Impl::CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, FnType&& fn)
     {
         auto expiredAt = ClockType::now() + after;
         
@@ -177,7 +178,7 @@ namespace grid
             std::unique_lock<MutexType> lock(_mtxForThread);
             
             id = _nNextTimerId++;
-            _timers.insert(std::make_pair(expiredAt, _TimerValue(id, repeat, interval, fn)));
+			_timers.insert(std::make_pair(expiredAt, _TimerValue(id, repeat, interval, std::move(fn))));
         }
         
         _cvEvent.notify_one();
@@ -274,7 +275,7 @@ namespace grid
 			std::list<_TimerValue> expiredTimers;
 			for (auto it = _timers.begin(); it != endIt; )
 			{
-				expiredTimers.emplace_back(it->second);
+				expiredTimers.emplace_back(std::move(it->second));
 				_timers.erase(it++);
 			}
 
@@ -297,15 +298,15 @@ namespace grid
 
 				if (tv._repeat)
 				{
-					repeatTimers.emplace_back(tv);
+					repeatTimers.emplace_back(std::move(tv));
 				}
 			}
 
 			//lock scope
 			lock.lock();
-			for (auto tv : repeatTimers)
+			for (auto& tv : repeatTimers)
 			{
-				_timers.insert(std::make_pair(now + tv._interval, tv));
+				_timers.insert(std::make_pair(now + tv._interval, std::move(tv)));
 			}
 		}
 	}
@@ -382,19 +383,19 @@ namespace grid
 		return _pImpl->DestroyTimer(id);
 	}
 
-	int Gcd::_DispatchAsync(const FnType& fn)
+	int Gcd::_DispatchAsync(FnType&& fn)
 	{
-		return _pImpl->DispatchAsync(fn);
+		return _pImpl->DispatchAsync(std::forward<FnType>(fn));
 	}
 
-	uint32_t Gcd::_CreateTimer(const DurationType& interval, bool repeat, const FnType& fn)
+	uint32_t Gcd::_CreateTimer(const DurationType& interval, bool repeat, FnType&& fn)
 	{
-		return _pImpl->CreateTimer(interval, repeat, fn);
+		return _pImpl->CreateTimer(interval, repeat, std::forward<FnType>(fn));
 	}
 
-    uint32_t Gcd::_CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, const FnType& fn)
-    {
-        return _pImpl->CreateTimer(after, interval, repeat, fn);
+	uint32_t Gcd::_CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, FnType&& fn)
+	{
+		return _pImpl->CreateTimer(after, interval, repeat, std::forward<FnType>(fn));
     }
     
 	std::unique_lock<Gcd::MutexType> Gcd::_AcquireSyncLock()

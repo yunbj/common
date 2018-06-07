@@ -11,16 +11,19 @@
 #include <base/StringConvertor.h>
 #include <base/LogMgr.h>
 
+#include <filesystem> // Microsoft-specific implementation header file name  
+namespace fs = std::experimental::filesystem::v1;
 namespace grid
 {
 	namespace util
 	{
         class FileSystem::_Impl
         {
+		public:
             static tstring GetCurrentPath()
             {
                 fs::path p = fs::current_path();
-                tstring strPath = p;
+                tstring strPath = p.string();
 
                 return strPath;
             }

@@ -412,12 +412,12 @@ namespace grid
             auto ms = duration_cast<milliseconds>(p.time_since_epoch());
             auto s = duration_cast<seconds>(ms);
             std::time_t tm_ = s.count();
-            tm lt;
-            tm *plt = localtime(&tm_);
-            lt = *plt;
+			struct tm lt;
+            //tm *plt = localtime_t(&tm_);
+			thread_safe_localtime(&tm_, &lt);
 
-            char strTime[100] = { 0, };
-            snprintf(strTime, 100, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+            tchar strTime[100] = { 0, };
+            tsnprintf(strTime, 100, _T("%04d-%02d-%02d %02d:%02d:%02d.%03d"),
                 lt.tm_year + 1900,
                 lt.tm_mon + 1,
                 lt.tm_mday,

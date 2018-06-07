@@ -43,7 +43,7 @@ void FileSystem::RemoveFile(const tstring& strFilePath)
 
 uint32_t FileSystem::GetParentProcessId()
 {
-    return _Impl::GetParentProccessId();
+    return _Impl::GetParentProcessId();
 }
 
 tstring FileSystem::GetProcessPath(uint32_t nPid)

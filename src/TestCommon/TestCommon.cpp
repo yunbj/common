@@ -15,6 +15,8 @@
 #include "TestFileSystem.h"
 #include "TestStringHelper.h"
 #include "TestGcd.h"
+#include "TestBuffer.h"
+
 
 using namespace grid;
 
@@ -37,6 +39,9 @@ int main()
 
 	TestGcd tg;
 	tg.DoTest();
+
+	TestBuffer tb;
+	tb.DoTest();
 
 
 	/// test log print time

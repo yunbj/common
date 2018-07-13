@@ -21,6 +21,8 @@
 		4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */; };
 		4AFE7FFA20C8F7C8005B0EDC /* FileSystemLinux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */; };
 		4AFE7FFD20C8F803005B0EDC /* TestGcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */; };
+		7046ECEB20F87870005E9635 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7046ECEA20F8786F005E9635 /* Buffer.cpp */; };
+		7046ECED20F8788D005E9635 /* TestBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7046ECEC20F8788D005E9635 /* TestBuffer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +57,8 @@
 		4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystemLinux.cpp; path = ../../base/FileSystemLinux.cpp; sourceTree = "<group>"; };
 		4AFE7FFB20C8F803005B0EDC /* TestGcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGcd.h; sourceTree = SOURCE_ROOT; };
 		4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestGcd.cpp; sourceTree = SOURCE_ROOT; };
+		7046ECEA20F8786F005E9635 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = ../../base/Buffer.cpp; sourceTree = "<group>"; };
+		7046ECEC20F8788D005E9635 /* TestBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestBuffer.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,7 @@
 		4A263FC51EC59DDB000F5C78 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				7046ECEC20F8788D005E9635 /* TestBuffer.cpp */,
 				4AFE7FFC20C8F803005B0EDC /* TestGcd.cpp */,
 				4AFE7FFB20C8F803005B0EDC /* TestGcd.h */,
 				4A263FBB1EC59DC9000F5C78 /* TestFileSystem.cpp */,
@@ -112,6 +117,7 @@
 		4A263FF71EC5A2FC000F5C78 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				7046ECEA20F8786F005E9635 /* Buffer.cpp */,
 				4AFE7FF920C8F7C8005B0EDC /* FileSystemLinux.cpp */,
 				4A6A3A3720BD409200AEF318 /* StringConvertor.cpp */,
 				4A1F28111EDEB4F700A8BC15 /* Base.cpp */,
@@ -183,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A1F28201EDEB4F700A8BC15 /* RunLoopForSignal.cpp in Sources */,
+				7046ECEB20F87870005E9635 /* Buffer.cpp in Sources */,
 				4A6A3A3820BD409200AEF318 /* StringConvertor.cpp in Sources */,
 				4A263FC41EC59DC9000F5C78 /* TestStringHelper.cpp in Sources */,
 				4A263FC21EC59DC9000F5C78 /* TestFileSystem.cpp in Sources */,
@@ -190,6 +197,7 @@
 				4AFE7FFA20C8F7C8005B0EDC /* FileSystemLinux.cpp in Sources */,
 				4A1F28221EDEB4F700A8BC15 /* StringHelper.cpp in Sources */,
 				4A1F281B1EDEB4F700A8BC15 /* Config.cpp in Sources */,
+				7046ECED20F8788D005E9635 /* TestBuffer.cpp in Sources */,
 				4AFE7FFD20C8F803005B0EDC /* TestGcd.cpp in Sources */,
 				4A263FC11EC59DC9000F5C78 /* main.cpp in Sources */,
 				4A1F281E1EDEB4F700A8BC15 /* LogMgr.cpp in Sources */,

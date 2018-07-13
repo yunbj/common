@@ -13,6 +13,7 @@
 #include "TestFileSystem.h"
 #include "TestStringHelper.h"
 #include "TestGcd.h"
+#include "TestBuffer.h"
 
 
 #if !defined(trpintf)
@@ -45,7 +46,9 @@ int main(int argc, char* argv[])
 	TestGcd tg;
 	tg.DoTest();
 
-
+    TestBuffer tb;
+    tb.DoTest();
+    
 	/// test log print time
 	for (auto i = 0; i < 10; ++i)
 	{

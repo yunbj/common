@@ -57,7 +57,11 @@ namespace grid
         //begin index plus n
         void skipBytes(uint32_t n);
         
+        //return actually written bytes
+        uint32_t written(uint32_t n);
+        
 		//endPos will be moved automatically after writting
+        //return actually written bytes
 		uint32_t write(const void* data, uint32_t n);
         
         //shallow copy

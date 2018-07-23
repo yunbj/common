@@ -108,6 +108,13 @@ void* Buffer::_getEndPos() const
     return (uint8_t*)_data->data() + _endPos;
 }
 
+uint32_t Buffer::written(uint32_t n)
+{
+    auto bytes = std::min(n, this->available());
+    _endPos += bytes;
+    return bytes;
+}
+
 uint32_t Buffer::write(const void* data, uint32_t n)
 {
     auto bytes = std::min(n, this->available());

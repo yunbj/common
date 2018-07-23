@@ -6,6 +6,8 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <cassert>
+
 
 using namespace grid;
 

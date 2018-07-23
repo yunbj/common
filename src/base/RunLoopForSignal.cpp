@@ -12,9 +12,9 @@ namespace grid
 	static void signal_handler(int signum)
 	{
 #ifdef SIGBREAK
-		if (signum == SIGINT || signum == SIGBREAK || signum == SIGUSR2)
+		if (signum == SIGINT || signum == SIGBREAK)
 #else
-        if (signum == SIGINT || signum == SIGUSR2)
+        if (signum == SIGINT)
 #endif // SIGBREAK
 		{
 			s_nQuit = 1;
@@ -36,7 +36,6 @@ namespace grid
 		std::signal(SIGBREAK, signal_handler);
 #endif
 		std::signal(SIGABRT, signal_handler);
-		std::signal(SIGUSR2, signal_handler);
 
         setjmp(grid::sigJumpBuf);
 

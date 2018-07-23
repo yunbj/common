@@ -233,7 +233,7 @@ namespace grid
         
 		while (!pred())
 		{
-            _cvSync.wait_for(lock, std::chrono::milliseconds(100), [this, &pred]() { return pred(); });
+            _cvSync.wait_for(lock, std::chrono::milliseconds(100), [&pred]() { return pred(); });
 		}
 	}
 

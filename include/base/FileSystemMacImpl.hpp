@@ -153,7 +153,7 @@ namespace grid
             }
 
 
-            static uint32_t GetParentProccessId()
+            static uint32_t GetParentProcessId()
             {
                 return getppid();
             }

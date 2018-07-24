@@ -66,6 +66,9 @@ namespace grid
         //end index minus n. it cant'be less beginPos
         void skipBack(uint32_t n);
         
+        //end index plus n. it can't be over capacity
+        void movePosToWrite(uint32_t n);
+        
         //return actually written bytes
         uint32_t written(uint32_t n);
         

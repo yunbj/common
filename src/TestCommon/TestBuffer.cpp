@@ -61,7 +61,13 @@ void TestBuffer::DoTest()
     buffer.skipBack(skipBytes);
     assert(buffer.size() == resultData3.length());
     assert(std::memcmp(buffer.data(), resultData3.c_str(), resultData3.length()) == 0);
-    
+
+    //movePosToWrite
+    buffer.movePosToWrite(skipBytes);
+
+    assert(buffer.size() == resultData2.length());
+    assert(std::memcmp(buffer.data(), resultData2.c_str(), resultData2.length()) == 0);
+
     //duplicate(shallow copy)
     auto bufferDup = buffer.duplicate();
     assert(bufferDup.data() == buffer.data());

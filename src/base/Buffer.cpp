@@ -135,6 +135,15 @@ void Buffer::skipBack(uint32_t n)
     }
 }
 
+void Buffer::movePosToWrite(uint32_t n)
+{
+    auto pos = _endPos + n;
+    if (pos <= _data->capacity())
+    {
+        _endPos = pos;
+    }
+}
+
 uint32_t Buffer::written(uint32_t n)
 {
     auto bytes = std::min(n, this->available());

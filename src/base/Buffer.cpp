@@ -114,31 +114,19 @@ uint32_t Buffer::available() const
     return _data->capacity() - _endPos;
 }
 
-void Buffer::skipFront(uint32_t n)
+void Buffer::skipPosToRead(int32_t n)
 {
-    auto pos = _beginPos + n;
+    const uint32_t pos = _beginPos + n;
     if (pos <= _endPos)
     {
         _beginPos = pos;
     }
 }
 
-void Buffer::skipBack(uint32_t n)
-{
-    if (n <= _endPos)
-    {
-        auto pos = _endPos - n;
-        if (_beginPos <= pos)
-        {
-            _endPos = pos;
-        }
-    }
-}
-
-void Buffer::movePosToWrite(uint32_t n)
+void Buffer::skipPosToWrite(int32_t n)
 {
     auto pos = _endPos + n;
-    if (pos <= _data->capacity())
+    if (_beginPos <= pos && pos <= _data->capacity())
     {
         _endPos = pos;
     }
@@ -157,6 +145,28 @@ uint32_t Buffer::write(const void* data, uint32_t n)
     std::memcpy(this->posToWrite(), data, bytes);
     _endPos += bytes;
     return bytes;
+}
+
+uint32_t Buffer::writeAtPos(const void* data, uint32_t n, uint32_t pos)
+{
+    if (pos >= _endPos)
+    {
+        this->skipPosToWrite(pos - _endPos);
+        return this->write(data, n);
+    }
+    else
+    {
+        const auto oldEndPos = _endPos;
+        this->skipPosToWrite(pos - _endPos);
+        const auto writtenBytes = this->write(data, n);
+        
+        if (_endPos < oldEndPos)
+        {
+            _endPos = oldEndPos;
+        }
+        
+        return writtenBytes;
+    }
 }
 
 Buffer Buffer::duplicate() const

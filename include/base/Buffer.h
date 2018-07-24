@@ -60,14 +60,11 @@ namespace grid
         
         void* posToWrite();
         
-        //begin index plus n. it can't be over endPos
-        void skipFront(uint32_t n);
+        //begin pos +- n. it can't be over endPos
+        void skipPosToRead(int32_t n);
         
-        //end index minus n. it cant'be less beginPos
-        void skipBack(uint32_t n);
-        
-        //end index plus n. it can't be over capacity
-        void movePosToWrite(uint32_t n);
+        //end pos +- n. it cant'be less beginPos
+        void skipPosToWrite(int32_t n);
         
         //return actually written bytes
         uint32_t written(uint32_t n);
@@ -75,6 +72,10 @@ namespace grid
 		//endPos will be moved automatically after writting
         //return actually written bytes
 		uint32_t write(const void* data, uint32_t n);
+        
+        //pos가 end pos보다 크면 skip후 write
+        //pos가 end pos보다 작으면 overwrite 후 end pos 조정
+        uint32_t writeAtPos(const void* data, uint32_t n, uint32_t pos);
         
         //shallow copy
         Buffer duplicate() const;

@@ -34,9 +34,6 @@ namespace grid
             Pool
         };//enum class Polic
 
-    private:
-        void* _getEndPos() const;
-        
 	public:
         Buffer(uint32_t n, MemoryPolicy memPolicy);
         
@@ -50,12 +47,24 @@ namespace grid
         //available bytes to write
         uint32_t available() const;
         
-		const void* data() const;
-
+        //same to posToRead
+        const void* data() const;
+        
         void* data();
         
-        //begin index plus n
-        void skipBytes(uint32_t n);
+        const void* posToRead() const;
+        
+        void* posToRead();
+        
+        const void* posToWrite() const;
+        
+        void* posToWrite();
+        
+        //begin index plus n. it can't be over endPos
+        void skipFront(uint32_t n);
+        
+        //end index minus n. it cant'be less beginPos
+        void skipBack(uint32_t n);
         
         //return actually written bytes
         uint32_t written(uint32_t n);

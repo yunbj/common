@@ -81,12 +81,32 @@ uint32_t Buffer::size() const
 
 const void* Buffer::data() const
 {
-    return const_cast<Buffer*>(this)->data();
+    return this->posToRead();
 }
 
 void* Buffer::data()
 {
+    return this->posToRead();
+}
+
+const void* Buffer::posToRead() const
+{
+    return const_cast<Buffer*>(this)->posToRead();
+}
+
+void* Buffer::posToRead()
+{
     return (uint8_t*)_data->data() + _beginPos;
+}
+
+const void* Buffer::posToWrite() const
+{
+    return const_cast<Buffer*>(this)->posToWrite();
+}
+
+void* Buffer::posToWrite()
+{
+    return (uint8_t*)_data->data() + _endPos;
 }
 
 uint32_t Buffer::available() const
@@ -94,7 +114,7 @@ uint32_t Buffer::available() const
     return _data->capacity() - _endPos;
 }
 
-void Buffer::skipBytes(uint32_t n)
+void Buffer::skipFront(uint32_t n)
 {
     auto pos = _beginPos + n;
     if (pos <= _endPos)
@@ -103,9 +123,16 @@ void Buffer::skipBytes(uint32_t n)
     }
 }
 
-void* Buffer::_getEndPos() const
+void Buffer::skipBack(uint32_t n)
 {
-    return (uint8_t*)_data->data() + _endPos;
+    if (n <= _endPos)
+    {
+        auto pos = _endPos - n;
+        if (_beginPos <= pos)
+        {
+            _endPos = pos;
+        }
+    }
 }
 
 uint32_t Buffer::written(uint32_t n)
@@ -118,7 +145,7 @@ uint32_t Buffer::written(uint32_t n)
 uint32_t Buffer::write(const void* data, uint32_t n)
 {
     auto bytes = std::min(n, this->available());
-    std::memcpy(this->_getEndPos(), data, bytes);
+    std::memcpy(this->posToWrite(), data, bytes);
     _endPos += bytes;
     return bytes;
 }
@@ -130,7 +157,7 @@ Buffer Buffer::duplicate() const
 
 Buffer Buffer::clone() const
 {
-    return Buffer(this->data(), this->size(), Buffer::MemoryPolicy::Default);
+    return Buffer(this->posToRead(), this->size(), Buffer::MemoryPolicy::Default);
 }
 
 Buffer BufferFactory::makeDefaultBuffer(uint32_t n)

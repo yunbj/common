@@ -47,14 +47,21 @@ void TestBuffer::DoTest()
     assert(std::memcmp(buffer.data(), resultData.c_str(), resultData.length()) == 0);
     assert(buffer.available() == 0);
     
-    //skip bytes
+    //skip front
     const uint32_t skipBytes = 3;
     const auto resultData2 = resultData.substr(skipBytes);
     
-    buffer.skipBytes(skipBytes);
-    assert(buffer.size() == cap - skipBytes);
+    buffer.skipFront(skipBytes);
+    assert(buffer.size() == resultData2.length());
     assert(std::memcmp(buffer.data(), resultData2.c_str(), resultData2.length()) == 0);
 
+    //skip back
+    const auto resultData3 = resultData2.substr(0, resultData2.length() - 3);
+    
+    buffer.skipBack(skipBytes);
+    assert(buffer.size() == resultData3.length());
+    assert(std::memcmp(buffer.data(), resultData3.c_str(), resultData3.length()) == 0);
+    
     //duplicate(shallow copy)
     auto bufferDup = buffer.duplicate();
     assert(bufferDup.data() == buffer.data());

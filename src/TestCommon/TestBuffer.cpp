@@ -225,5 +225,43 @@ void TestBuffer::DoTest()
         std::cout << "= writeAtPos() pass" << std::endl;
     }
     
+    //writeFromBuffer 1
+    {
+        const uint32_t cap = 100;
+        const std::string data = "0123456789";
+        
+        auto buffer1 = BufferFactory::makeDefaultBuffer(cap);
+        assert(data.length() == buffer1.write(data.c_str(), data.length()));
+
+        const uint32_t skipBytes = 3;
+        const uint32_t len = 4;
+        
+        auto buffer2 = BufferFactory::makeDefaultBuffer(cap);
+        assert(len == buffer2.writeFromBuffer(buffer1, skipBytes, len));
+        assert(buffer2.size() == len);
+        assert(std::memcmp(buffer2.posToRead(), data.substr(skipBytes, len).c_str(), len) == 0);
+        
+        std::cout << "= writeFromBuffer 1 pass" << std::endl;
+    }
+    
+    //writeFromBuffer 2
+    {
+        const uint32_t cap = 100;
+        const std::string data = "0123456789";
+        
+        auto buffer1 = BufferFactory::makeDefaultBuffer(cap);
+        assert(data.length() == buffer1.write(data.c_str(), data.length()));
+        
+        const uint32_t skipBytes = 3;
+        const uint32_t len = data.length() - skipBytes;
+        
+        auto buffer2 = BufferFactory::makeDefaultBuffer(cap);
+        assert(len == buffer2.writeFromBuffer(buffer1, skipBytes, data.length()));
+        assert(buffer2.size() == len);
+        assert(std::memcmp(buffer2.posToRead(), data.substr(skipBytes, len).c_str(), len) == 0);
+        
+        std::cout << "= writeFromBuffer 2 pass" << std::endl;
+    }
+    
     std::cout << "============= complete Buffer test ===============" << std::endl;
 }

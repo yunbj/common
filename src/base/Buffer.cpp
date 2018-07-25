@@ -187,6 +187,12 @@ uint32_t Buffer::writeAtPos(const void* data, uint32_t n, uint32_t pos)
     }
 }
 
+uint32_t Buffer::writeFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n)
+{
+    auto dup = buffer.duplicate(pos, n);
+    return this->write(dup.posToRead(), dup.size());
+}
+
 Buffer Buffer::duplicate() const
 {
     return *this;

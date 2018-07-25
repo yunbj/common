@@ -82,6 +82,8 @@ namespace grid
         //pos가 end pos보다 작으면 overwrite 후 end pos 조정
         uint32_t writeAtPos(const void* data, uint32_t n, uint32_t pos);
         
+        uint32_t writeFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n);
+        
         //shallow copy
         Buffer duplicate() const;
         

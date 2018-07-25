@@ -32,6 +32,24 @@ void TestBuffer::DoTest()
         std::cout << "= empty buffer pass" << std::endl;
     }
     
+    //adjustToSize
+    {
+        auto buffer = BufferFactory::makeDefaultBuffer(cap);
+        
+        assert(buffer.write(data.c_str(), data.length()) == data.length());
+        
+        const uint32_t skipBytes = 3;
+        const uint32_t sizeBytes = 4;
+
+        buffer.skipPosToRead(skipBytes);
+        buffer.adjustToSize(sizeBytes);
+        
+        assert(buffer.size() == sizeBytes);
+        assert(std::memcmp(buffer.posToRead(), data.substr(skipBytes).c_str(), sizeBytes) == 0);
+        
+        std::cout << "= adjustToSize pass" << std::endl;
+    }
+
     //write manually
     //assert(data.length() == buffer.write(data.c_str(), data.length()));
     std::memcpy(buffer.data(), data.c_str(), data.length());
@@ -107,14 +125,48 @@ void TestBuffer::DoTest()
         std::cout << "= skipPosToWrite(+) pass" << std::endl;
     }
     
-    //duplicate(shallow copy)
+    //duplicate 1
     auto bufferDup = buffer.duplicate();
     assert(bufferDup.data() == buffer.data());
     assert(bufferDup.size() == buffer.size());
     assert(std::memcmp(bufferDup.data(), buffer.data(), buffer.size()) == 0);
 
-    std::cout << "= duplicate() pass" << std::endl;
+    std::cout << "= duplicate 1 pass" << std::endl;
 
+    //duplicate 2
+    {
+        auto buffer = BufferFactory::makeDefaultBuffer(cap);
+        
+        assert(buffer.write(data.c_str(), data.length()) == data.length());
+
+        const uint32_t pos = 3;
+        const uint32_t len = 4;
+        
+        auto bufferDup = buffer.duplicate(pos, len);
+        
+        assert(bufferDup.size() == len);
+        assert(std::memcmp(bufferDup.data(), data.substr(pos, len).c_str(), len) == 0);
+
+        std::cout << "= duplicate 2 pass" << std::endl;
+    }
+    
+    //duplicate 3
+    {
+        auto buffer = BufferFactory::makeDefaultBuffer(cap);
+        
+        assert(buffer.write(data.c_str(), data.length()) == data.length());
+        
+        const uint32_t pos = 3;
+        const uint32_t len = data.length() - pos;
+        
+        auto bufferDup = buffer.duplicate(pos, data.length());
+        
+        assert(bufferDup.size() == len);
+        assert(std::memcmp(bufferDup.data(), data.substr(pos, len).c_str(), len) == 0);
+        
+        std::cout << "= duplicate 3 pass" << std::endl;
+    }
+    
     //copy ctor(shallow copy)
     auto bufferCtor = buffer;
     assert(bufferCtor.data() == buffer.data());

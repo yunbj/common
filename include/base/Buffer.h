@@ -34,6 +34,9 @@ namespace grid
             Pool
         };//enum class Polic
 
+    private:
+        Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos);
+        
 	public:
         Buffer(uint32_t n, MemoryPolicy memPolicy);
         
@@ -66,6 +69,8 @@ namespace grid
         //end pos +- n. it cant'be less beginPos
         void skipPosToWrite(int32_t n);
         
+        void adjustToSize(uint32_t n);
+        
         //return actually written bytes
         uint32_t written(uint32_t n);
         
@@ -79,6 +84,8 @@ namespace grid
         
         //shallow copy
         Buffer duplicate() const;
+        
+        Buffer duplicate(uint32_t pos, uint32_t n) const;
         
         //deep copy
         Buffer clone() const;

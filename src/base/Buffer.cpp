@@ -53,6 +53,14 @@ public:
 };//class DefaultBufferData
     
 
+Buffer::Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos)
+    : _data(data)
+    , _beginPos(beginPos)
+    , _endPos(endPos)
+{
+    assert(beginPos <= endPos);
+}
+
 Buffer::Buffer(uint32_t n, MemoryPolicy memPolicy)
     : _data()
     , _beginPos(0)
@@ -133,6 +141,15 @@ void Buffer::skipPosToWrite(int32_t n)
     }
 }
 
+void Buffer::adjustToSize(uint32_t n)
+{
+    const auto pos = _beginPos + n;
+    if (pos <= _data->capacity())
+    {
+        _endPos = pos;
+    }
+}
+
 uint32_t Buffer::written(uint32_t n)
 {
     auto bytes = std::min(n, this->available());
@@ -173,6 +190,20 @@ uint32_t Buffer::writeAtPos(const void* data, uint32_t n, uint32_t pos)
 Buffer Buffer::duplicate() const
 {
     return *this;
+}
+
+Buffer Buffer::duplicate(uint32_t pos, uint32_t n) const
+{
+    if (_beginPos <= pos)
+    {
+        const auto endPos = std::min(pos + n, _endPos);
+        
+        return Buffer(_data, pos, endPos);
+    }
+    else
+    {
+        return Buffer(0, Buffer::MemoryPolicy::Default);
+    }
 }
 
 Buffer Buffer::clone() const

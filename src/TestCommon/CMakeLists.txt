@@ -40,7 +40,7 @@ set(COMMON_HEADER_FILES
 	../../include/base/Gcd.h
 	../../include/base/ILogWriter.h
 	../../include/base/LogMgr.h
-	../../include/base/PidFile.h
+	../../include/base/Pipe.h
 	../../include/base/RunLoopForSignal.h
 	../../include/base/StringConvertor.h
 	../../include/base/StringHelper.h
@@ -57,7 +57,7 @@ set(COMMON_SRC_FILES
 	../base/FileSystem.cpp
 	../base/Gcd.cpp
 	../base/LogMgr.cpp
-	../base/PidFile.cpp
+	../base/Pipe.cpp
 	../base/RunLoopForSignal.cpp
 	../base/StringConvertor.cpp
 	../base/StringHelper.cpp

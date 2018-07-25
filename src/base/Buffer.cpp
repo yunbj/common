@@ -90,12 +90,12 @@ uint32_t Buffer::size() const
 
 const void* Buffer::data() const
 {
-    return this->posToRead();
+    return const_cast<Buffer*>(this)->data();
 }
 
 void* Buffer::data()
 {
-    return this->posToRead();
+    return _data->data();
 }
 
 const void* Buffer::posToRead() const

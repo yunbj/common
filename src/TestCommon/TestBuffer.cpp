@@ -127,7 +127,7 @@ void TestBuffer::DoTest()
     
     //duplicate 1
     auto bufferDup = buffer.duplicate();
-    assert(bufferDup.data() == buffer.data());
+    assert(bufferDup.memory() == buffer.memory());
     assert(bufferDup.size() == buffer.size());
     assert(std::memcmp(bufferDup.posToRead(), buffer.posToRead(), buffer.size()) == 0);
 
@@ -169,7 +169,7 @@ void TestBuffer::DoTest()
     
     //copy ctor(shallow copy)
     auto bufferCtor = buffer;
-    assert(bufferCtor.data() == buffer.data());
+    assert(bufferCtor.memory() == buffer.memory());
     assert(bufferCtor.size() == buffer.size());
     assert(std::memcmp(bufferCtor.posToRead(), buffer.posToRead(), buffer.size()) == 0);
 
@@ -177,7 +177,7 @@ void TestBuffer::DoTest()
     
     //clone(deep copy)
     auto bufferClone = buffer.clone();
-    assert(bufferClone.data() != buffer.data());
+    assert(bufferClone.memory() != buffer.memory());
     assert(bufferClone.size() == buffer.size());
     assert(std::memcmp(bufferClone.posToRead(), buffer.posToRead(), buffer.size()) == 0);
 

@@ -50,11 +50,16 @@ namespace grid
         //available bytes to write
         uint32_t available() const;
         
-        //return memory pointer
+        //same to posToRead
         const void* data() const;
         
         void* data();
         
+        //return memory pointer
+        const void* memory() const;
+        
+        void* memory();
+
         const void* posToRead() const;
         
         void* posToRead();

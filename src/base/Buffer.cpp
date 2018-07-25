@@ -95,6 +95,16 @@ const void* Buffer::data() const
 
 void* Buffer::data()
 {
+    return this->posToRead();
+}
+
+const void* Buffer::memory() const
+{
+    return const_cast<Buffer*>(this)->data();
+}
+
+void* Buffer::memory()
+{
     return _data->data();
 }
 

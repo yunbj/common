@@ -22,6 +22,16 @@ void TestBuffer::DoTest()
 	auto buffer = BufferFactory::makeDefaultBuffer(cap);
 	assert(buffer.capacity() == cap);
 
+    //empty buffer
+    {
+        auto buffer = BufferFactory::makeDefaultBuffer(0);
+        assert(buffer.capacity() == 0);
+        assert(buffer.size() == 0);
+        assert(buffer.write(data.c_str(), data.length()) == 0);
+        
+        std::cout << "= empty buffer pass" << std::endl;
+    }
+    
     //write manually
     //assert(data.length() == buffer.write(data.c_str(), data.length()));
     std::memcpy(buffer.data(), data.c_str(), data.length());

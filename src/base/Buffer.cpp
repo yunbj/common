@@ -21,9 +21,10 @@ public:
 		: _data(nullptr)
 		, _capacity(n)
 	{
-		assert(n > 0);
-
-		_data = new uint8_t[n];
+        if (n > 0)
+        {
+            _data = new uint8_t[n];
+        }
 	}
 
 	~DefaultBufferData()

@@ -12,9 +12,9 @@ namespace grid
 	static void signal_handler(int signum)
 	{
 #ifdef SIGBREAK
-		if (signum == SIGINT || signum == SIGBREAK)
+		if (signum == SIGINT || signum == SIGBREAK || signum == SIGUSR2)
 #else
-        if (signum == SIGINT)
+        if (signum == SIGINT || signum == SIGUSR2)
 #endif // SIGBREAK
 		{
 			s_nQuit = 1;

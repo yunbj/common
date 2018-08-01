@@ -330,6 +330,8 @@ namespace grid
 				}
 			}
 
+			copiedQueue.clear();
+
 			lock.lock();
 		}
 	}

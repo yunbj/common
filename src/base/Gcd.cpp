@@ -94,7 +94,7 @@ namespace grid
 
 		_precision = precision;
 		_bRunning = true;
-		_fut = std::async(&_Impl::_ThreadFunc, this);
+        _fut = std::async(std::launch::async, &_Impl::_ThreadFunc, this);
 
 		if (_fut.wait_for(std::chrono::seconds(0)) == std::future_status::deferred)
 		{

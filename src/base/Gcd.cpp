@@ -249,7 +249,7 @@ namespace grid
 
 			this->_ProcessTimer(lock);
 
-            _cvEvent.wait_for(lock, _precision, [this ]{ return !_q.empty(); });
+            _cvEvent.wait_for(lock, _precision, [this]{ return !(_q.empty() && _bRunning); });
 		}
 
 		_q.clear();

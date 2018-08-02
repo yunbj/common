@@ -38,6 +38,7 @@ set(COMMON_HEADER_FILES
 	../../include/base/Config.h
 	../../include/base/FileSystem.h
 	../../include/base/Gcd.h
+	../../include/base/MemoryPool.h
 	../../include/base/ILogWriter.h
 	../../include/base/LogMgr.h
 	../../include/base/Pipe.h
@@ -55,6 +56,7 @@ set(COMMON_SRC_FILES
 	../base/Buffer.cpp
 	../base/Config.cpp
 	../base/FileSystem.cpp
+	../base/MemoryPool.cpp
 	../base/Gcd.cpp
 	../base/LogMgr.cpp
 	../base/Pipe.cpp
@@ -78,6 +80,7 @@ set(UNITTEST_COMMON_SRC_FILES
 	TestBuffer.cpp
 	TestFileSystem.cpp
 	TestGcd.cpp
+	TestMemoryPool.cpp
 	TestStringConvertor.cpp
 	TestStringHelper.cpp
 	main.cpp

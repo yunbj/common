@@ -14,6 +14,7 @@
 #include "TestStringHelper.h"
 #include "TestGcd.h"
 #include "TestBuffer.h"
+#include "TestMemoryPool.h"
 
 
 #if !defined(trpintf)
@@ -43,11 +44,14 @@ int main(int argc, char* argv[])
 	TestFileSystem fs;
 	fs.DoTest();
 
-	TestGcd tg;
-	tg.DoTest();
+	//TestGcd tg;
+	//tg.DoTest();
 
     TestBuffer tb;
     tb.DoTest();
+    
+    TestMemoryPool mp;
+    mp.DoTest();
     
 	/// test log print time
 	for (auto i = 0; i < 10; ++i)
@@ -58,8 +62,8 @@ int main(int argc, char* argv[])
 	}
 
 #if !defined(_WIN32)
-	TestStringConvertor sc;
-	sc.DoTest();
+	//TestStringConvertor sc;
+	//sc.DoTest();
 #endif
 
 	//getchar();

@@ -1,5 +1,5 @@
 #include "base/Buffer.h"
-
+#include "base/MemoryPool.h"
 
 #include <stdexcept>
 #include <algorithm>
@@ -10,6 +10,51 @@
 using namespace grid;
 
 
+class PoolBufferData : public IBufferData
+{
+private:
+    uint8_t* _data;
+    const std::size_t _capacity;
+    
+public:
+    explicit PoolBufferData(uint32_t n)
+        : _data(nullptr)
+        , _capacity(n)
+    {
+        _data = static_cast<uint8_t*>(MemoryPool::instance().alloc(n));
+    }
+    
+    ~PoolBufferData()
+    {
+        if (_data)
+        {
+            MemoryPool::instance().dealloc(_data);
+            _data = nullptr;
+        }
+    }
+    
+    virtual uint32_t capacity() const
+    {
+        return _capacity;
+    }
+    
+    virtual void* data()
+    {
+        return _data;
+    }
+    
+    virtual const void* data() const
+    {
+        return _data;
+    }
+    
+    virtual MemoryPolicy policy() const
+    {
+        return MemoryPolicy::Pool;
+    }
+};//class PoolBufferData
+
+
 class DefaultBufferData : public IBufferData
 {
 private:
@@ -17,7 +62,7 @@ private:
 	const std::size_t _capacity;
 
 public:
-	explicit DefaultBufferData(uint32_t n)
+    explicit DefaultBufferData(uint32_t n)
 		: _data(nullptr)
 		, _capacity(n)
 	{
@@ -31,7 +76,7 @@ public:
 	{
 		if (_data)
 		{
-			delete[] _data;
+            delete[] _data;
 			_data = nullptr;
 		}
 	}
@@ -50,8 +95,27 @@ public:
     {
         return _data;
     }
+
+    virtual MemoryPolicy policy() const
+    {
+        return MemoryPolicy::Default;
+    }
 };//class DefaultBufferData
     
+
+std::shared_ptr<IBufferData> IBufferData::make(uint32_t n, MemoryPolicy policy)
+{
+    if (policy == MemoryPolicy::Pool)
+    {
+        return std::make_shared<PoolBufferData>(n);
+    }
+    else
+    {
+        return std::make_shared<DefaultBufferData>(n);
+    }
+    
+}
+
 
 Buffer::Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos)
     : _data(data)
@@ -66,7 +130,7 @@ Buffer::Buffer(uint32_t n, MemoryPolicy memPolicy)
     , _beginPos(0)
     , _endPos(0)
 {
-    _data = std::make_shared<DefaultBufferData>(n);
+    _data = IBufferData::make(n, memPolicy);
 }
 
 Buffer::Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy)
@@ -74,7 +138,8 @@ Buffer::Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy)
     , _beginPos(0)
     , _endPos(0)
 {
-    _data = std::make_shared<DefaultBufferData>(size);
+    _data = IBufferData::make(size, memPolicy);
+
     this->write(data, size);
 }
 
@@ -218,23 +283,24 @@ Buffer Buffer::duplicate(uint32_t pos, uint32_t n) const
     }
     else
     {
-        return Buffer(0, Buffer::MemoryPolicy::Default);
+        return Buffer(0, _data->policy());
     }
 }
 
 Buffer Buffer::clone() const
 {
-    return Buffer(this->posToRead(), this->size(), Buffer::MemoryPolicy::Default);
+    return Buffer(this->posToRead(), this->size(), _data->policy());
 }
 
 Buffer BufferFactory::makeDefaultBuffer(uint32_t n)
 {
-    return Buffer(n, Buffer::MemoryPolicy::Default);
+    return Buffer(n, MemoryPolicy::Default);
+    //return makePoolBuffer(n);
 }
 
 Buffer BufferFactory::makePoolBuffer(uint32_t n)
 {
-    return Buffer(n, Buffer::MemoryPolicy::Pool);
+    return Buffer(n, MemoryPolicy::Pool);
 }
 
 

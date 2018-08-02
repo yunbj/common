@@ -7,6 +7,13 @@
 
 namespace grid
 {
+    enum class MemoryPolicy
+    {
+        Default,
+        Pool
+    };//enum class MemoryPolicy
+    
+    
     class IBufferData
     {
     public:
@@ -17,6 +24,11 @@ namespace grid
         virtual const void* data() const = 0;
         
         virtual void* data() = 0;
+        
+        virtual MemoryPolicy policy() const = 0;
+        
+    public:
+        static std::shared_ptr<IBufferData> make(uint32_t n, MemoryPolicy policy);
     };//class IBufferData
     
     
@@ -26,13 +38,6 @@ namespace grid
         std::shared_ptr<IBufferData> _data;
         uint32_t _beginPos = 0;
         uint32_t _endPos = 0;
-
-    public:
-        enum class MemoryPolicy
-        {
-            Default,
-            Pool
-        };//enum class Polic
 
     private:
         Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos);

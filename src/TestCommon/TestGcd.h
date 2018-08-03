@@ -2,13 +2,11 @@
 
 #include <memory>
 
-namespace grid
-{
+namespace grid {
 	class Gcd;
 }
 
-class TestGcd
-{
+class TestGcd {
 	using Gcd = grid::Gcd;
 	using GcdPtr = std::shared_ptr<Gcd>;
 public:
@@ -25,3 +23,4 @@ private:
 
 	GcdPtr _gcd;
 };
+

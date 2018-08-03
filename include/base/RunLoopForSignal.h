@@ -4,10 +4,8 @@
 #include <csignal>
 
 
-namespace grid
-{
-	class RunLoopForSignal
-	{
+namespace grid {
+	class RunLoopForSignal {
 	public:
 		static void Run();
 	};

@@ -4,15 +4,12 @@
 using namespace grid;
 
 
-MemoryPool::~MemoryPool()
-{
-    this->cleanup();
+MemoryPool::~MemoryPool() {
+    this->Cleanup();
 }
 
-void* MemoryPool::alloc(std::size_t n)
-{
-    if (n == 0)
-    {
+void* MemoryPool::Alloc(std::size_t n) {
+    if (n == 0) {
         n = 1;
     }
     
@@ -21,32 +18,28 @@ void* MemoryPool::alloc(std::size_t n)
     uint8_t* ptr = nullptr;
 
     auto it = _blocks.lower_bound(n);
-    if (it == _blocks.end())
-    {
+    if (it == _blocks.end()) {
         ptr = new uint8_t[n + kHeaderLength];
         
-        this->_increaseSize(n);
+        this->_IncreaseSize(n);
         
         //write header
         std::memcpy(ptr, &n, kHeaderLength);
     }
-    else
-    {
+    else {
         ptr = it->second;
         _blocks.erase(it);
     }
     
-    return _getUserAddress(ptr);
+    return _GetUserAddress(ptr);
 }
 
-void MemoryPool::dealloc(void* ptr)
-{
-    if (!ptr)
-    {
+void MemoryPool::Dealloc(void* ptr) {
+    if (!ptr) {
         return;
     }
     
-    auto addr = static_cast<uint8_t*>(_getOriginalAddress(ptr));
+    auto addr = static_cast<uint8_t*>(_GetOriginalAddress(ptr));
     
     //read header
     std::size_t n = 0;
@@ -56,19 +49,16 @@ void MemoryPool::dealloc(void* ptr)
     _blocks.insert(std::make_pair(n, addr));
 }
 
-uint64_t MemoryPool::getSize() const
-{
+uint64_t MemoryPool::GetSize() const {
     std::lock_guard<std::mutex> guard(_mtx);
 
     return _totalSize;
 }
 
-void MemoryPool::cleanup()
-{
+void MemoryPool::Cleanup() {
     std::lock_guard<std::mutex> guard(_mtx);
 
-    for (auto& elem : _blocks)
-    {
+    for (auto& elem : _blocks) {
         delete[] elem.second;
     }
     
@@ -76,17 +66,14 @@ void MemoryPool::cleanup()
     _totalSize = 0;
 }
 
-void MemoryPool::_increaseSize(std::size_t n)
-{
+void MemoryPool::_IncreaseSize(std::size_t n) {
     _totalSize += n;
 }
 
-void* MemoryPool::_getOriginalAddress(void* ptr)
-{
+void* MemoryPool::_GetOriginalAddress(void* ptr) {
     return static_cast<uint8_t*>(ptr) - kHeaderLength;
 }
 
-void* MemoryPool::_getUserAddress(void* ptr)
-{
+void* MemoryPool::_GetUserAddress(void* ptr) {
     return static_cast<uint8_t*>(ptr) + kHeaderLength;
 }

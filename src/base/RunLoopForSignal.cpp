@@ -9,38 +9,33 @@ namespace grid
 	static volatile std::sig_atomic_t s_nQuit = 0;
     jmp_buf sigJumpBuf;
 
-	static void signal_handler(int signum)
-	{
+	static void SignalHandler(int signum) {
 #ifdef SIGBREAK
-		if (signum == SIGINT || signum == SIGBREAK || signum == SIGUSR2)
+        if (signum == SIGINT || signum == SIGBREAK || signum == SIGUSR2) {
 #else
-        if (signum == SIGINT || signum == SIGUSR2)
+        if (signum == SIGINT || signum == SIGUSR2) {
 #endif // SIGBREAK
-		{
 			s_nQuit = 1;
 
             longjmp(grid::sigJumpBuf, 1);
 		}
-		else
-		{
+		else {
 			tcerr << _T("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Unexpected signal(") << signum << _T(") @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@") << std::endl;
 
 			std::_Exit(EXIT_FAILURE);
 		}
 	}
 
-	void RunLoopForSignal::Run()
-	{
-		std::signal(SIGINT, signal_handler);
+	void RunLoopForSignal::Run() {
+		std::signal(SIGINT, SignalHandler);
 #ifdef SIGBREAK
-		std::signal(SIGBREAK, signal_handler);
+		std::signal(SIGBREAK, SignalHandler);
 #endif
-		std::signal(SIGABRT, signal_handler);
+		std::signal(SIGABRT, SignalHandler);
 
         setjmp(grid::sigJumpBuf);
 
-		while (!s_nQuit)
-		{
+		while (!s_nQuit) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}

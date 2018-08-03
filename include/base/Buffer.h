@@ -5,35 +5,32 @@
 #include <cstddef>
 
 
-namespace grid
-{
-    enum class MemoryPolicy
-    {
+namespace grid {
+    
+    enum class MemoryPolicy {
         Default,
         Pool
     };//enum class MemoryPolicy
     
     
-    class IBufferData
-    {
+    class IBufferData {
     public:
         virtual ~IBufferData() = default;
         
-        virtual uint32_t capacity() const = 0;
+        virtual uint32_t Capacity() const = 0;
         
-        virtual const void* data() const = 0;
+        virtual const void* Data() const = 0;
         
-        virtual void* data() = 0;
+        virtual void* Data() = 0;
         
-        virtual MemoryPolicy policy() const = 0;
+        virtual MemoryPolicy Policy() const = 0;
         
     public:
-        static std::shared_ptr<IBufferData> make(uint32_t n, MemoryPolicy policy);
+        static std::shared_ptr<IBufferData> Make(uint32_t n, MemoryPolicy policy);
     };//class IBufferData
     
     
-	class Buffer
-	{
+	class Buffer {
     private:
         std::shared_ptr<IBufferData> _data;
         uint32_t _beginPos = 0;
@@ -47,69 +44,68 @@ namespace grid
         
         Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy);
         
-        uint32_t capacity() const;
+        uint32_t Capacity() const;
 
         //length of data
-		uint32_t size() const;
+		uint32_t Size() const;
 
         //available bytes to write
-        uint32_t available() const;
+        uint32_t Available() const;
         
         //same to posToRead
-        const void* data() const;
+        const void* Data() const;
         
-        void* data();
+        void* Data();
         
         //return memory pointer
-        const void* memory() const;
+        const void* Memory() const;
         
-        void* memory();
+        void* Memory();
 
-        const void* posToRead() const;
+        const void* PosToRead() const;
         
-        void* posToRead();
+        void* PosToRead();
         
-        const void* posToWrite() const;
+        const void* PosToWrite() const;
         
-        void* posToWrite();
+        void* PosToWrite();
         
         //begin pos +- n. it can't be over endPos
-        void skipPosToRead(int32_t n);
+        void SkipPosToRead(int32_t n);
         
         //end pos +- n. it cant'be less beginPos
-        void skipPosToWrite(int32_t n);
+        void SkipPosToWrite(int32_t n);
         
-        void adjustToSize(uint32_t n);
+        void AdjustToSize(uint32_t n);
         
         //return actually written bytes
-        uint32_t written(uint32_t n);
+        uint32_t Written(uint32_t n);
         
 		//endPos will be moved automatically after writting
         //return actually written bytes
-		uint32_t write(const void* data, uint32_t n);
+		uint32_t Write(const void* data, uint32_t n);
         
         //pos가 end pos보다 크면 skip후 write
         //pos가 end pos보다 작으면 overwrite 후 end pos 조정
-        uint32_t writeAtPos(const void* data, uint32_t n, uint32_t pos);
+        uint32_t WriteAtPos(const void* data, uint32_t n, uint32_t pos);
         
-        uint32_t writeFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n);
+        uint32_t WriteFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n);
         
         //shallow copy
-        Buffer duplicate() const;
+        Buffer Duplicate() const;
         
-        Buffer duplicate(uint32_t pos, uint32_t n) const;
+        Buffer Duplicate(uint32_t pos, uint32_t n) const;
         
         //deep copy
-        Buffer clone() const;
+        Buffer Clone() const;
 	};//class Buffer
 
 
-	class BufferFactory
-	{
+	class BufferFactory {
 	public:
-		static Buffer makeDefaultBuffer(uint32_t n);
+		static Buffer MakeDefaultBuffer(uint32_t n);
 
-        static Buffer makePoolBuffer(uint32_t n);
+        static Buffer MakePoolBuffer(uint32_t n);
     };//class BufferFactory
 }//namespace grid
 

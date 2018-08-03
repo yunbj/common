@@ -10,8 +10,7 @@
 using namespace grid;
 
 
-class PoolBufferData : public IBufferData
-{
+class PoolBufferData : public IBufferData {
 private:
     uint8_t* _data;
     const std::size_t _capacity;
@@ -19,44 +18,37 @@ private:
 public:
     explicit PoolBufferData(uint32_t n)
         : _data(nullptr)
-        , _capacity(n)
-    {
-        _data = static_cast<uint8_t*>(MemoryPool::instance().alloc(n));
+        , _capacity(n) {
+        _data = static_cast<uint8_t*>(MemoryPool::Instance().Alloc(n));
     }
     
-    ~PoolBufferData()
-    {
+    ~PoolBufferData() {
         if (_data)
         {
-            MemoryPool::instance().dealloc(_data);
+            MemoryPool::Instance().Dealloc(_data);
             _data = nullptr;
         }
     }
     
-    virtual uint32_t capacity() const
-    {
+    virtual uint32_t Capacity() const {
         return _capacity;
     }
     
-    virtual void* data()
-    {
+    virtual void* Data() {
         return _data;
     }
     
-    virtual const void* data() const
-    {
+    virtual const void* Data() const {
         return _data;
     }
     
-    virtual MemoryPolicy policy() const
-    {
+    virtual MemoryPolicy Policy() const {
         return MemoryPolicy::Pool;
     }
 };//class PoolBufferData
 
 
-class DefaultBufferData : public IBufferData
-{
+class DefaultBufferData : public IBufferData {
 private:
 	uint8_t* _data;
 	const std::size_t _capacity;
@@ -64,197 +56,159 @@ private:
 public:
     explicit DefaultBufferData(uint32_t n)
 		: _data(nullptr)
-		, _capacity(n)
-	{
-        if (n > 0)
-        {
+		, _capacity(n) {
+        if (n > 0) {
             _data = new uint8_t[n];
         }
 	}
 
-	~DefaultBufferData()
-	{
-		if (_data)
-		{
+	~DefaultBufferData() {
+		if (_data) {
             delete[] _data;
 			_data = nullptr;
 		}
 	}
 
-	virtual uint32_t capacity() const
-	{
+	virtual uint32_t Capacity() const {
 		return _capacity;
 	}
 
-    virtual void* data()
-    {
+    virtual void* Data() {
         return _data;
     }
     
-    virtual const void* data() const
-    {
+    virtual const void* Data() const {
         return _data;
     }
 
-    virtual MemoryPolicy policy() const
-    {
+    virtual MemoryPolicy Policy() const {
         return MemoryPolicy::Default;
     }
 };//class DefaultBufferData
     
 
-std::shared_ptr<IBufferData> IBufferData::make(uint32_t n, MemoryPolicy policy)
-{
-    if (policy == MemoryPolicy::Pool)
-    {
+std::shared_ptr<IBufferData> IBufferData::Make(uint32_t n, MemoryPolicy policy) {
+    if (policy == MemoryPolicy::Pool) {
         return std::make_shared<PoolBufferData>(n);
     }
-    else
-    {
+    else {
         return std::make_shared<DefaultBufferData>(n);
     }
-    
 }
 
 
 Buffer::Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos)
     : _data(data)
     , _beginPos(beginPos)
-    , _endPos(endPos)
-{
+    , _endPos(endPos) {
     assert(beginPos <= endPos);
 }
 
 Buffer::Buffer(uint32_t n, MemoryPolicy memPolicy)
     : _data()
     , _beginPos(0)
-    , _endPos(0)
-{
-    _data = IBufferData::make(n, memPolicy);
+    , _endPos(0) {
+    _data = IBufferData::Make(n, memPolicy);
 }
 
 Buffer::Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy)
     : _data()
     , _beginPos(0)
-    , _endPos(0)
-{
-    _data = IBufferData::make(size, memPolicy);
+    , _endPos(0) {
+    _data = IBufferData::Make(size, memPolicy);
 
-    this->write(data, size);
+    this->Write(data, size);
 }
 
-uint32_t Buffer::capacity() const
-{
-    return _data->capacity();
+uint32_t Buffer::Capacity() const {
+    return _data->Capacity();
 }
 
-uint32_t Buffer::size() const
-{
+uint32_t Buffer::Size() const {
     return _endPos - _beginPos;
 }
 
-const void* Buffer::data() const
-{
-    return const_cast<Buffer*>(this)->data();
+const void* Buffer::Data() const {
+    return const_cast<Buffer*>(this)->Data();
 }
 
-void* Buffer::data()
-{
-    return this->posToRead();
+void* Buffer::Data() {
+    return this->PosToRead();
 }
 
-const void* Buffer::memory() const
-{
-    return const_cast<Buffer*>(this)->data();
+const void* Buffer::Memory() const {
+    return const_cast<Buffer*>(this)->Data();
 }
 
-void* Buffer::memory()
-{
-    return _data->data();
+void* Buffer::Memory() {
+    return _data->Data();
 }
 
-const void* Buffer::posToRead() const
-{
-    return const_cast<Buffer*>(this)->posToRead();
+const void* Buffer::PosToRead() const {
+    return const_cast<Buffer*>(this)->PosToRead();
 }
 
-void* Buffer::posToRead()
-{
-    return (uint8_t*)_data->data() + _beginPos;
+void* Buffer::PosToRead() {
+    return (uint8_t*)_data->Data() + _beginPos;
 }
 
-const void* Buffer::posToWrite() const
-{
-    return const_cast<Buffer*>(this)->posToWrite();
+const void* Buffer::PosToWrite() const {
+    return const_cast<Buffer*>(this)->PosToWrite();
 }
 
-void* Buffer::posToWrite()
-{
-    return (uint8_t*)_data->data() + _endPos;
+void* Buffer::PosToWrite() {
+    return (uint8_t*)_data->Data() + _endPos;
 }
 
-uint32_t Buffer::available() const
-{
-    return _data->capacity() - _endPos;
+uint32_t Buffer::Available() const {
+    return _data->Capacity() - _endPos;
 }
 
-void Buffer::skipPosToRead(int32_t n)
-{
+void Buffer::SkipPosToRead(int32_t n) {
     const uint32_t pos = _beginPos + n;
-    if (pos <= _endPos)
-    {
+    if (pos <= _endPos) {
         _beginPos = pos;
     }
 }
 
-void Buffer::skipPosToWrite(int32_t n)
-{
+void Buffer::SkipPosToWrite(int32_t n) {
     auto pos = _endPos + n;
-    if (_beginPos <= pos && pos <= _data->capacity())
-    {
+    if (_beginPos <= pos && pos <= _data->Capacity()) {
         _endPos = pos;
     }
 }
 
-void Buffer::adjustToSize(uint32_t n)
-{
+void Buffer::AdjustToSize(uint32_t n) {
     const auto pos = _beginPos + n;
-    if (pos <= _data->capacity())
-    {
+    if (pos <= _data->Capacity()) {
         _endPos = pos;
     }
 }
 
-uint32_t Buffer::written(uint32_t n)
-{
-    auto bytes = std::min(n, this->available());
+uint32_t Buffer::Written(uint32_t n) {
+    auto bytes = std::min(n, this->Available());
     _endPos += bytes;
     return bytes;
 }
 
-uint32_t Buffer::write(const void* data, uint32_t n)
-{
-    auto bytes = std::min(n, this->available());
-    std::memcpy(this->posToWrite(), data, bytes);
+uint32_t Buffer::Write(const void* data, uint32_t n) {
+    auto bytes = std::min(n, this->Available());
+    std::memcpy(this->PosToWrite(), data, bytes);
     _endPos += bytes;
     return bytes;
 }
 
-uint32_t Buffer::writeAtPos(const void* data, uint32_t n, uint32_t pos)
-{
-    if (pos >= _endPos)
-    {
-        this->skipPosToWrite(pos - _endPos);
-        return this->write(data, n);
+uint32_t Buffer::WriteAtPos(const void* data, uint32_t n, uint32_t pos) {
+    if (pos >= _endPos) {
+        this->SkipPosToWrite(pos - _endPos);
+        return this->Write(data, n);
     }
-    else
-    {
+    else {
         const auto oldEndPos = _endPos;
-        this->skipPosToWrite(pos - _endPos);
-        const auto writtenBytes = this->write(data, n);
+        this->SkipPosToWrite(pos - _endPos);
+        const auto writtenBytes = this->Write(data, n);
         
-        if (_endPos < oldEndPos)
-        {
+        if (_endPos < oldEndPos) {
             _endPos = oldEndPos;
         }
         
@@ -262,45 +216,35 @@ uint32_t Buffer::writeAtPos(const void* data, uint32_t n, uint32_t pos)
     }
 }
 
-uint32_t Buffer::writeFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n)
-{
-    auto dup = buffer.duplicate(pos, n);
-    return this->write(dup.posToRead(), dup.size());
+uint32_t Buffer::WriteFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n) {
+    auto dup = buffer.Duplicate(pos, n);
+    return this->Write(dup.PosToRead(), dup.Size());
 }
 
-Buffer Buffer::duplicate() const
-{
+Buffer Buffer::Duplicate() const {
     return *this;
 }
 
-Buffer Buffer::duplicate(uint32_t pos, uint32_t n) const
-{
-    if (_beginPos <= pos)
-    {
+Buffer Buffer::Duplicate(uint32_t pos, uint32_t n) const {
+    if (_beginPos <= pos) {
         const auto endPos = std::min(pos + n, _endPos);
         
         return Buffer(_data, pos, endPos);
     }
-    else
-    {
-        return Buffer(0, _data->policy());
+    else {
+        return Buffer(0, _data->Policy());
     }
 }
 
-Buffer Buffer::clone() const
-{
-    return Buffer(this->posToRead(), this->size(), _data->policy());
+Buffer Buffer::Clone() const {
+    return Buffer(this->PosToRead(), this->Size(), _data->Policy());
 }
 
-Buffer BufferFactory::makeDefaultBuffer(uint32_t n)
-{
+Buffer BufferFactory::MakeDefaultBuffer(uint32_t n) {
     return Buffer(n, MemoryPolicy::Default);
     //return makePoolBuffer(n);
 }
 
-Buffer BufferFactory::makePoolBuffer(uint32_t n)
-{
+Buffer BufferFactory::MakePoolBuffer(uint32_t n) {
     return Buffer(n, MemoryPolicy::Pool);
 }
-
-

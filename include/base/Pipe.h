@@ -8,44 +8,43 @@ namespace grid
 {
 
 
-/**
- *	@class	Pipe
- *	@brief	pipe object의 wrapper class
- */
-class Pipe
-{
-public://noncopyable
-    Pipe(const Pipe&) = delete;
-    Pipe(Pipe&&) = delete;
-    Pipe& operator=(const Pipe&) = delete;
-    Pipe& operator=(Pipe&&) = delete;
-    
-public:
-	Pipe();
+    /**
+     *	@class	Pipe
+     *	@brief	pipe object의 wrapper class
+     */
+    class Pipe {
+    public://noncopyable
+        Pipe(const Pipe&) = delete;
+        Pipe(Pipe&&) = delete;
+        Pipe& operator=(const Pipe&) = delete;
+        Pipe& operator=(Pipe&&) = delete;
+        
+    public:
+        Pipe();
 
-	~Pipe();
+        ~Pipe();
 
-	int open();
+        int Open();
 
-	int close();
+        int Close();
 
-	bool isOpen() const;
+        bool IsOpen() const;
 
-	int setReadHandleToNonBlock();
+        int SetReadHandleToNonBlock();
 
-	int setWriteHandleToNonBlock();
+        int SetWriteHandleToNonBlock();
 
-	int getReadHandle() const { return _handle[0]; }
+        int GetReadHandle() const { return _handle[0]; }
 
-	int getWriteHandle() const { return _handle[1]; }
+        int GetWriteHandle() const { return _handle[1]; }
 
-    int send(const char* szBuf, std::size_t nBufLen);
+        int Send(const char* szBuf, std::size_t nBufLen);
 
-	int recv(char* szBuf, std::size_t nBufLen);
+        int Recv(char* szBuf, std::size_t nBufLen);
 
-private:
-	int _handle[2];
-};// class Pipe
+    private:
+        int _handle[2];
+    };// class Pipe
 
 
 }// namespace grid

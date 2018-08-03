@@ -12,46 +12,39 @@
 using namespace std;
 using namespace grid;
 
-class TestClass
-{
+class TestClass {
 public:
 	TestClass(bool allowCopy)
-		: _allowCopy(allowCopy)
-	{
-
+		: _allowCopy(allowCopy) {
 	}
-	TestClass(const TestClass& rhs)
-	{
+
+    TestClass(const TestClass& rhs) {
 		value = rhs.value;
 		printf(">>>> copy constructor\n");
 
-		if (!_allowCopy)
-		{
+		if (!_allowCopy) {
 			assert(!"called copy constructor");
 		}
 	}
 
-	TestClass(TestClass&& rhs)
-	{
+	TestClass(TestClass&& rhs) {
 		value = rhs.value;
 		rhs.value = 0;
 		printf(">>>> move constructor\n");
 	}
 
-	TestClass& operator= (const TestClass& rhs)
-	{
+	TestClass& operator= (const TestClass& rhs) {
 		value = rhs.value;
 		printf(">>>> copy assign\n");
 
-		if (!_allowCopy)
-		{
+		if (!_allowCopy) {
 			assert(!"called copy assign");
 		}
         
         return *this;
 	}
-	TestClass& operator= (TestClass&& rhs)
-	{
+    
+	TestClass& operator= (TestClass&& rhs) {
 		value = rhs.value;
 		rhs.value = 0;
 		printf(">>>> move assign\n");
@@ -63,26 +56,22 @@ public:
 	bool _allowCopy = true;
 };
 
-class CallbackClass : public enable_shared_from_this<CallbackClass>
-{
+class CallbackClass : public enable_shared_from_this<CallbackClass> {
 	//
 public:
 
-	void call(int value)
-	{
+	void call(int value) {
 		printf(">>>> called  method function callback.(value : %d)\n", value);
 	}
 
-	void TestCallback(std::shared_ptr<Gcd> gcd)
-	{
+	void TestCallback(std::shared_ptr<Gcd> gcd) {
 		gcd->DispatchAsync(&CallbackClass::call, shared_from_this(), 10);
 	}
 
 	int value = 0;
 };
 
-void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd)
-{
+void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd) {
 	TestClass c(false);
 	auto ret = 0;
 
@@ -121,8 +110,7 @@ void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd)
 	gcd->DestroyTimer(tId);
 }
 
-void TestGcd::_TestCopyValue(std::shared_ptr<Gcd> gcd)
-{
+void TestGcd::_TestCopyValue(std::shared_ptr<Gcd> gcd) {
 	TestClass c(true);
 	auto ret = 0;
 
@@ -176,21 +164,17 @@ void TestGcd::_TestFuncMoveValue(std::shared_ptr<Gcd> gcd)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 TestGcd::TestGcd()
-	: _gcd(make_shared<Gcd>())
-{
+	: _gcd(make_shared<Gcd>()) {
 
 }
 
-TestGcd::~TestGcd()
-{
-	if (_gcd)
-	{
+TestGcd::~TestGcd() {
+	if (_gcd) {
 		_gcd->Fini();
 	}
 }
 
-void TestGcd::DoTest()
-{
+void TestGcd::DoTest() {
 	printf("============= start Gcd test ===============\n");
 
 	_gcd->Init();

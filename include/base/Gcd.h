@@ -6,10 +6,8 @@
 #include <mutex>
 #include <type_traits>
 
-namespace grid
-{
-	class Gcd
-	{
+namespace grid {
+	class Gcd {
 	public:
 		using DurationType = std::chrono::milliseconds;
 		using FnType = std::function<void(void)>;
@@ -29,18 +27,15 @@ namespace grid
 		std::size_t GetNumOfPendings() const;
 
 		template<class Fn, class...Args>
-		int DispatchAsync(Fn&& fn, Args&&... args)
-		{
+		int DispatchAsync(Fn&& fn, Args&&... args) {
 			return this->_DispatchAsync(std::bind(std::forward<Fn>(fn), std::forward<Args>(args)...));
 		}
 
 		template<class Fn, class...Args>
-		decltype(auto) DispatchSync(Fn&& fn, Args&&... args)
-		{
+		decltype(auto) DispatchSync(Fn&& fn, Args&&... args) {
 			using RetType = std::result_of_t<Fn(Args...)>;
 
-			if (!this->IsRunning())
-			{
+			if (!this->IsRunning()) {
 				return RetType();
 			}
 
@@ -50,14 +45,11 @@ namespace grid
 			auto lock = this->_AcquireSyncLock();
             bool comp = false;
             
-			this->DispatchAsync([this, &ret, &binded, &comp]()
-			{
-				try
-				{
+			this->DispatchAsync([this, &ret, &binded, &comp]() {
+				try {
 					ret = binded();
 				}
-				catch (...)
-				{
+				catch (...) {
 				}
 
 				this->_NotifySync(comp);
@@ -68,14 +60,12 @@ namespace grid
 		}
 
 		template<class Fn, class...Args>
-		uint32_t CreateTimer(const DurationType& interval, bool repeat, Fn&& fn, Args&&... args)
-		{
+		uint32_t CreateTimer(const DurationType& interval, bool repeat, Fn&& fn, Args&&... args) {
 			return this->CreateTimer(interval, interval, repeat, std::forward<Fn>(fn), std::forward<Args>(args)...);
 		}
 
         template<class Fn, class...Args>
-        uint32_t CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, Fn&& fn, Args&&... args)
-        {
+        uint32_t CreateTimer(const DurationType& after, const DurationType& interval, bool repeat, Fn&& fn, Args&&... args) {
             return this->_CreateTimer(after, interval, repeat, std::bind(std::forward<Fn>(fn), std::forward<Args>(args)...));
         }
         
@@ -97,5 +87,5 @@ namespace grid
 	private:
 		class _Impl;
 		std::unique_ptr<_Impl> _pImpl;
-	};
-}
+	};//class Gcd
+}//namespace grid

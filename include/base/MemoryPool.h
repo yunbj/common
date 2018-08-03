@@ -5,18 +5,17 @@
 #include <mutex>
 
 
-namespace grid
-{
-    class MemoryPool
-    {
+namespace grid {
+    
+    class MemoryPool {
     private:
         MemoryPool() = default;
         
-        void _increaseSize(std::size_t n);
+        void _IncreaseSize(std::size_t n);
 
-        static void* _getOriginalAddress(void* ptr);
+        static void* _GetOriginalAddress(void* ptr);
         
-        static void* _getUserAddress(void* ptr);
+        static void* _GetUserAddress(void* ptr);
         
     public://noncopyable
         MemoryPool(const MemoryPool&) = delete;
@@ -25,21 +24,20 @@ namespace grid
         MemoryPool& operator=(MemoryPool&&) = delete;
         
     public:
-        static MemoryPool& instance()
-        {
+        static MemoryPool& Instance() {
             static MemoryPool inst;
             return inst;
         }
         
         ~MemoryPool();
         
-        void* alloc(std::size_t n);
+        void* Alloc(std::size_t n);
         
-        void dealloc(void* ptr);
+        void Dealloc(void* ptr);
         
-        uint64_t getSize() const;
+        uint64_t GetSize() const;
         
-        void cleanup();
+        void Cleanup();
         
     private:
         static const uint32_t kHeaderLength = sizeof(std::size_t);

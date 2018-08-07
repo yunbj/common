@@ -6,11 +6,13 @@
 #define COMMON_TESTTHREADPOOL_H
 
 
-
 class TestThreadPool {
+    public:
+    TestThreadPool();
+        virtual ~TestThreadPool();
 
+        void DoTest();
 };
-
 
 
 #endif //COMMON_TESTTHREADPOOL_H

@@ -13,23 +13,21 @@
 
 #include <filesystem> // Microsoft-specific implementation header file name  
 namespace fs = std::experimental::filesystem::v1;
-namespace grid
-{
-	namespace util
-	{
-        class FileSystem::_Impl
-        {
+namespace grid {
+    namespace util {
+	    class FileSystem::_Impl {
+
 		public:
-            static tstring GetCurrentPath()
-            {
+            static tstring GetCurrentPath() {
+
                 fs::path p = fs::current_path();
                 tstring strPath = p.string();
 
                 return strPath;
             }
 
-            static tstring GetFileName()
-            {
+            static tstring GetFileName() {
+
                 tstring strPath;
                 tchar szPath[MAX_PATH] = { 0 };
 
@@ -40,8 +38,8 @@ namespace grid
 
                 tstring::size_type pos = strPath.rfind(_T('\\'));
 
-                if (pos == tstring::npos)
-                {
+                if (pos == tstring::npos) {
+
                     return strPath;
                 }
 
@@ -50,15 +48,15 @@ namespace grid
                 return strPath;
             }
 
-            static uint32_t GetCurrentProcessId()
-            {
+            static uint32_t GetCurrentProcessId() {
+
                 return ::GetCurrentProcessId();
             }
 
-            static bool CreateDir(const tstring& strDir)
-            {
-                if (strDir.empty())
-                {
+            static bool CreateDir(const tstring& strDir) {
+
+                if (strDir.empty()) {
+
                     return false;
                 }
 
@@ -66,43 +64,43 @@ namespace grid
                 return fs::create_directories(p);
             }
 
-            static bool DeleteDir(const tstring& strDir)
-            {
+            static bool DeleteDir(const tstring& strDir) {
+
                 fs::path p = strDir;
 
                 return fs::remove_all(p);
             }
 
-            static void RemoveFile(const tstring& strFilePath)
-            {
+            static void RemoveFile(const tstring& strFilePath) {
+
                 fs::path p = strFilePath;
                 fs::remove(p);
             }
 
-            static uint32_t GetParentProcessId()
-            {
+            static uint32_t GetParentProcessId() {
+
                 PROCESSENTRY32 processInfo;
                 processInfo.dwSize = sizeof(processInfo);
 
                 HANDLE processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, static_cast<DWORD>(0));
-                if (processesSnapshot == INVALID_HANDLE_VALUE)
-                {
+                if (processesSnapshot == INVALID_HANDLE_VALUE) {
+
                     return 0;
                 }
 
                 Process32First(processesSnapshot, &processInfo);
                 DWORD nCurProcessId = GetCurrentProcessId();
 
-                if (nCurProcessId == processInfo.th32ProcessID)
-                {
+                if (nCurProcessId == processInfo.th32ProcessID) {
+
                     CloseHandle(processesSnapshot);
                     return processInfo.th32ParentProcessID;
                 }
 
-                while (Process32Next(processesSnapshot, &processInfo))
-                {
-                    if (nCurProcessId == processInfo.th32ProcessID)
-                    {
+                while (Process32Next(processesSnapshot, &processInfo)) {
+
+                    if (nCurProcessId == processInfo.th32ProcessID) {
+
                         CloseHandle(processesSnapshot);
                         return processInfo.th32ParentProcessID;
                     }
@@ -112,12 +110,12 @@ namespace grid
                 return 0;
             }
 
-            static tstring GetProcessPath(uint32_t nPid)
-            {
+            static tstring GetProcessPath(uint32_t nPid) {
+
                 HANDLE hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, nPid);
 
-                if (hProcess == nullptr)
-                {
+                if (hProcess == nullptr) {
+
                     ERROR_LOG(_T("[filesys] failed open process.(pid:%u, err:%d)"), nPid, GetLastError());
                     return _T("");
                 }
@@ -125,8 +123,8 @@ namespace grid
                 tchar szPath[MAX_PATH] = { 0 };
                 DWORD dwLen = sizeof(szPath) - 1;
 
-                if (QueryFullProcessImageName(hProcess, 0, szPath, &dwLen))
-                {
+                if (QueryFullProcessImageName(hProcess, 0, szPath, &dwLen)) {
+
                     tstring strPath(szPath, dwLen);
 
                     StringHelper::ToLower(strPath);
@@ -139,8 +137,8 @@ namespace grid
                 return _T("");
             }
 
-            static std::string GetSystemLocaleName()
-            {
+            static std::string GetSystemLocaleName() {
+
                 wchar_t szLocaleInfo[MAX_PATH];
                 GetSystemDefaultLocaleName(szLocaleInfo, MAX_PATH);
 

@@ -34,8 +34,8 @@
     #include <wchar.h>
 #endif
 
-namespace grid
-{
+namespace grid {
+
 	#if defined(UNICODE)
 		#define	tstring			std::wstring
 		#define	tcout			std::wcout

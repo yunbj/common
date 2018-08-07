@@ -2,12 +2,11 @@
 
 #include <base/Base.h>
 
-namespace grid
-{
-	namespace util
-	{
-		class FileSystem
-		{
+namespace grid {
+	namespace util {
+
+		class FileSystem {
+
 		public:
 			static tstring GetCurrentPath();// get current path
 			static tstring GetFileName();	// get grid client binary name

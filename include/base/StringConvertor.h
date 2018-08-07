@@ -92,12 +92,11 @@
 #endif // GRID_STR_CONV
 
 
-namespace grid
-{
-	namespace util
-	{
-		class StringConvertor
-		{
+namespace grid {
+	namespace util	{
+
+		class StringConvertor {
+
 		public:
             /*
 				@param pszSrc : pszSrc must null-terminate string.

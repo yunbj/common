@@ -27,12 +27,10 @@
 #define REGISTER_LOG_WRITER(writer)				grid::log::LogMgr::Instance().RegisterLogWriter(writer)
 #define UNREGISTER_LOG_WRITER(writer)			grid::log::LogMgr::Instance().UnregisterLogWriter(writer)
 
-namespace grid
-{
-	namespace log
-	{
-		enum LOG_LEVEL
-		{
+namespace grid {
+	namespace log {
+
+		enum LOG_LEVEL {
 			LOG_DEBUG = 1,
 			LOG_INFO = 2,
 			LOG_WARN = 3,
@@ -40,8 +38,7 @@ namespace grid
 			LOG_FATAL = 5,
 		};
 
-		enum LOG_WRITER_TYPE
-		{
+		enum LOG_WRITER_TYPE {
 			LOG_WRITER_CONSOLE			= 0x0001,
 			LOG_WRITER_OUTPUT_DEBUG		= 0x0010,
 			LOG_WRITER_FILE				= 0x0100,
@@ -51,8 +48,8 @@ namespace grid
 
 		class ILogWriter;
 		///////////////////////////////////////////////////////////////////////
-		class LogMgr
-		{
+		class LogMgr  {
+
 			using ILogWriterPtr = std::shared_ptr<ILogWriter>;
 			using LogWriterList = std::set<ILogWriterPtr>;
 			using LogWriterListItr = LogWriterList::iterator;
@@ -62,8 +59,7 @@ namespace grid
 		protected:
 			LogMgr();
 		public:
-			static LogMgr& Instance()
-			{
+			static LogMgr& Instance() {
 				static LogMgr logMgr;
 
 				return logMgr;
@@ -80,10 +76,10 @@ namespace grid
 			void UnregisterLogWriter(const ILogWriterPtr& pLogWriter);
 
 			template<class ...Args>
-			void WriteLog(const tchar * szFileName, int nLine, int level, const tchar * pszFmt, Args&&... args)
-			{
-				if (m_LogLevel.load() > level)
-				{
+			void WriteLog(const tchar * szFileName, int nLine, int level, const tchar * pszFmt, Args&&... args) {
+
+				if (m_LogLevel.load() > level) {
+
 					return;
 				}
 
@@ -96,8 +92,8 @@ namespace grid
 
 				// read lock
 				std::lock_guard<MUTEX_TYPE> lock(m_gcdMutex);
-				if (m_pGcd != nullptr)
-				{
+				if (m_pGcd != nullptr) {
+
 					m_pGcd->DispatchAsync(&LogMgr::_Evt_Write, this, tstring(szFileName), nLine, level, curTime, strTid, strTime, strBuffer);
 				}
 			}

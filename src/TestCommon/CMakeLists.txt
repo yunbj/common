@@ -47,6 +47,10 @@ set(COMMON_HEADER_FILES
 	../../include/base/StringHelper.h
 	../../include/base/json.hpp
 	../../include/base/tinydir.h
+	../../include/base/IThreadPoolImpl.h
+	../../include/base/Thread.h
+	../../include/base/ThreadPool.h
+	../../include/base/ThreadPoolImpl.h
 	)
 
 
@@ -63,6 +67,9 @@ set(COMMON_SRC_FILES
 	../base/RunLoopForSignal.cpp
 	../base/StringConvertor.cpp
 	../base/StringHelper.cpp
+	../base/Thread.cpp
+	../base/ThreadPool.cpp
+	../base/ThreadPoolImpl.cpp
 	)
 	
 
@@ -72,6 +79,7 @@ set(UNITTEST_COMMON_HEADER_FILES
 	TestGcd.h
 	TestStringConvertor.h
 	TestStringHelper.h
+	TestThreadPool.h
 	)
 
 set(UNITTEST_COMMON_SRC_FILES
@@ -83,16 +91,20 @@ set(UNITTEST_COMMON_SRC_FILES
 	TestMemoryPool.cpp
 	TestStringConvertor.cpp
 	TestStringHelper.cpp
+	TestThreadPool.cpp
 	main.cpp
 	)
 
 
 # 공통 컴파일러
-set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_CXX_COMPILER "g++")
-set(CMAKE_AR_COMPILER "ar")
-set(CMAKE_LD_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_COMPILER "gcc")
+
+if (APPLE)
+#set(CMAKE_CXX_COMPILER "g++")
+#set(CMAKE_AR_COMPILER "ar")
+#set(CMAKE_LD_COMPILER "g++")
+endif()
 
 
 # 공통 컴파일 옵션, 링크 옵션
@@ -111,12 +123,19 @@ endif()
 
 
 # 공통 링크 라이브러리 디렉토리 (-L)
- 
 
 # 출력 디렉토리
 
  
 # 빌드 대상 바이너리 추가
 add_executable(${UNITTEST_COMMON} ${UNITTEST_COMMON_SRC_FILES})
+
+# 공통 링크 라이브러리 (-l)
+if (APPLE)
+	target_link_libraries(${UNITTEST_COMMON} pthread)
+elseif (UNIX)
+	target_link_libraries(${UNITTEST_COMMON} pthread stdc++fs)
+endif()
+
 install(TARGETS ${UNITTEST_COMMON} DESTINATION bin)
 

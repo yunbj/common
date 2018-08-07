@@ -11,47 +11,47 @@
 using namespace grid;
 using namespace grid::util;
 
-tstring FileSystem::GetCurrentPath()
-{
+tstring FileSystem::GetCurrentPath() {
+
     return _Impl::GetCurrentPath();
 }
 
-tstring FileSystem::GetFileName()
-{
+tstring FileSystem::GetFileName() {
+
     return _Impl::GetFileName();
 }
 
-uint32_t FileSystem::GetCurrentProcessId()
-{
+uint32_t FileSystem::GetCurrentProcessId() {
+
     return _Impl::GetCurrentProcessId();
 }
 
-bool FileSystem::CreateDir(const tstring& strDir)
-{
+bool FileSystem::CreateDir(const tstring& strDir) {
+
     return _Impl::CreateDir(strDir);
 }
 
-bool FileSystem::DeleteDir(const tstring& strDir)
-{
+bool FileSystem::DeleteDir(const tstring& strDir) {
+
     return _Impl::DeleteDir(strDir);
 }
 
-void FileSystem::RemoveFile(const tstring& strFilePath)
-{
+void FileSystem::RemoveFile(const tstring& strFilePath) {
+
     _Impl::RemoveFile(strFilePath);
 }
 
-uint32_t FileSystem::GetParentProcessId()
-{
+uint32_t FileSystem::GetParentProcessId() {
+
     return _Impl::GetParentProcessId();
 }
 
-tstring FileSystem::GetProcessPath(uint32_t nPid)
-{
+tstring FileSystem::GetProcessPath(uint32_t nPid) {
+
     return _Impl::GetProcessPath(nPid);
 }
 
-std::string FileSystem::GetSystemLocaleName()
-{
+std::string FileSystem::GetSystemLocaleName() {
+
     return _Impl::GetSystemLocaleName();
 }

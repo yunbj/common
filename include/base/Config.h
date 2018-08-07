@@ -9,33 +9,31 @@
 #endif // defined
 
 
-namespace grid
-{
+namespace grid {
 
-	class Config
-	{
+	class Config {
+
 	public:
 		tstring Get(const tstring& strKey, const tstring& val = _T("")) const;
 
 		template<typename Ret>
-		Ret GetT(const tstring& strKey, Ret val = Ret()) const
-		{
+		Ret GetT(const tstring& strKey, Ret val = Ret()) const {
 			tstring strValue = this->Get(strKey);
-			if (strValue == _T(""))
-			{
+			if (strValue == _T("")) {
+
 				return val;
 			}
-			else
-			{
+			else {
+
 				tistringstream iss(strValue);
 
 				Ret ret;
-				if (iss >> ret)
-				{
+				if (iss >> ret) {
+
 					return ret;
 				}
-				else
-				{
+				else {
+
 					return val;
 				}
 			}
@@ -44,8 +42,8 @@ namespace grid
 		void Set(const tstring& strKey, const tstring& strValue);
 
 		template<typename Ret>
-		void SetT(const tstring& strKey, Ret val)
-		{
+		void SetT(const tstring& strKey, Ret val) {
+
 			this->Set(strKey, to_tstring(val));
 		}
 

@@ -2,12 +2,9 @@
 
 #include <base/Base.h>
 
-namespace grid
-{
-	namespace util
-	{
-		class StringHelper
-		{
+namespace grid {
+	namespace util {
+		class StringHelper {
 		public:
 			static constexpr const tchar * STR_TRIM_SPACE = _T(" \r\n\t");
 

@@ -17,15 +17,15 @@ using namespace grid::util;
 
 namespace fs = std::experimental::filesystem;
 
-namespace grid
-{
-    namespace util
-    {
-        class FileSystem::_Impl
-        {
+namespace grid {
+
+    namespace util {
+
+        class FileSystem::_Impl {
+
         public:
-            static tstring GetCurrentPath()
-            {
+            static tstring GetCurrentPath() {
+
                 std::error_code ec;
                 fs::path p = fs::current_path(ec);
                 tstring strPath = p;
@@ -33,8 +33,8 @@ namespace grid
                 return strPath;
             }
 
-            static tstring GetFileName()
-            {
+            static tstring GetFileName() {
+
                 tchar szPath[MAX_PATH] = { 0 };
                 tchar szTmp[MAX_PATH] = {0};
 
@@ -44,15 +44,15 @@ namespace grid
                 return fs::path(szPath).filename();
             }
 
-            static uint32_t GetCurrentProcessId()
-            {
+            static uint32_t GetCurrentProcessId() {
+
                 return getpid();
             }
 
-            static bool CreateDir(const tstring& strDir)
-            {
-                if (strDir.empty())
-                {
+            static bool CreateDir(const tstring& strDir) {
+
+                if (strDir.empty()) {
+
                     return false;
                 }
 
@@ -61,30 +61,29 @@ namespace grid
                 return fs::create_directories(p, ec);
             }
 
-            static bool DeleteDir(const tstring& strDir)
-            {
+            static bool DeleteDir(const tstring& strDir) {
+
                 fs::path p = strDir;
                 std::error_code ec;
 
                 return fs::remove_all(p, ec);
             }
 
-            static void RemoveFile(const tstring& strFilePath)
-            {
+            static void RemoveFile(const tstring& strFilePath) {
+
                 std::error_code ec;
                 fs::path p = strFilePath;
 
                 fs::remove(p,ec);
             }
 
+            static uint32_t GetParentProcessId() {
 
-            static uint32_t GetParentProccessId()
-            {
                 return getppid();
             }
 
-            static tstring GetProcessPath(uint32_t nPid)
-            {
+            static tstring GetProcessPath(uint32_t nPid) {
+
                 tstring strPath;
                 tchar szTmp[MAX_PATH] = {0};
                 tchar szPath[MAX_PATH] = { 0 };
@@ -97,8 +96,8 @@ namespace grid
 
                 tstring::size_type pos = strPath.rfind(_T('/'));
 
-                if (pos == tstring::npos)
-                {
+                if (pos == tstring::npos) {
+
                     return strPath;
                 }
 
@@ -107,8 +106,7 @@ namespace grid
                 return strPath;
             }
 
-            static std::string GetSystemLocaleName()
-            {
+            static std::string GetSystemLocaleName() {
 
                 return std::string("");
             }

@@ -115,8 +115,17 @@ bool FileSystem::CreateDir(const tstring& path) {
             }
         }
             // now, try to create again
-            return mkdir(path.c_str(), mode) == 0;
-            
+            ret = mkdir(path.c_str(), mode);
+            if (ret == 0) {
+                return true;
+            }
+            // Other thread had made directory
+            else if (errno == EEXIST) {
+                return isDirExist(path);
+            }
+            else {
+                return false;
+            }
         case EEXIST:
             // done!
             return isDirExist(path);

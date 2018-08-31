@@ -15,7 +15,7 @@
 #include "TestGcd.h"
 #include "TestBuffer.h"
 #include "TestMemoryPool.h"
-
+#include "TestCFSMemoryPool.h"
 
 #if !defined(trpintf)
 #if defined(UNICODE)
@@ -52,6 +52,9 @@ int main(int argc, char* argv[])
     
     TestMemoryPool mp;
     mp.DoTest();
+    
+    TestCFSMemoryPool cfsmp;
+    cfsmp.DoTest();
     
 	/// test log print time
 	for (auto i = 0; i < 10; ++i)

@@ -1,6 +1,6 @@
 #include "base/Buffer.h"
 #include "base/MemoryPool.h"
-
+#include "base/ConcurrentFixedSizeMemoryPool.h"
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
@@ -10,91 +10,96 @@
 using namespace grid;
 
 
+class DefaultBufferData : public IBufferData {
+private:
+    const std::size_t _capacity;
+    uint8_t* _data;
+
+public:
+    explicit DefaultBufferData(uint32_t n)
+        : _capacity(n)
+        , _data(nullptr) {
+        _data = new uint8_t[n];
+    }
+
+    ~DefaultBufferData() {
+        if (_data) {
+            delete[] _data;
+            _data = nullptr;
+        }
+    }
+
+    virtual uint32_t Capacity() const override { return _capacity; }
+    
+    virtual const void* Data() const override { return _data; }
+    
+    virtual void* Data() override { return _data; }
+    
+    virtual std::shared_ptr<IBufferData> Make(uint32_t size) override { return std::make_shared<DefaultBufferData>(size); }
+};
+
+
+/**
+ */
 class PoolBufferData : public IBufferData {
 private:
-    uint8_t* _data;
     const std::size_t _capacity;
-    
+    uint8_t* _data;
+
 public:
     explicit PoolBufferData(uint32_t n)
-        : _data(nullptr)
-        , _capacity(n) {
+        : _capacity(n)
+        , _data(nullptr) {
         _data = static_cast<uint8_t*>(MemoryPool::Instance().Alloc(n));
     }
     
     ~PoolBufferData() {
-        if (_data)
-        {
+        if (_data) {
             MemoryPool::Instance().Dealloc(_data);
             _data = nullptr;
         }
     }
+
+    virtual uint32_t Capacity() const override { return _capacity; }
     
-    virtual uint32_t Capacity() const {
-        return _capacity;
-    }
+    virtual const void* Data() const override { return _data; }
     
-    virtual void* Data() {
-        return _data;
-    }
-    
-    virtual const void* Data() const {
-        return _data;
-    }
-    
-    virtual MemoryPolicy Policy() const {
-        return MemoryPolicy::Pool;
-    }
+    virtual void* Data() override { return _data; }
+
+    virtual std::shared_ptr<IBufferData> Make(uint32_t size) override { return std::make_shared<PoolBufferData>(size); }
 };//class PoolBufferData
 
 
-class DefaultBufferData : public IBufferData {
+/**
+ */
+class FixedSizePoolBufferData : public IBufferData {
 private:
-	uint8_t* _data;
-	const std::size_t _capacity;
-
+    const std::size_t _capacity;
+    uint8_t* _data;
+    
 public:
-    explicit DefaultBufferData(uint32_t n)
-		: _data(nullptr)
-		, _capacity(n) {
-        if (n > 0) {
-            _data = new uint8_t[n];
+    explicit FixedSizePoolBufferData(uint32_t n)
+        : _capacity(n)
+        , _data(nullptr) {
+        _data = static_cast<uint8_t*>(ConcurrentFixedSizeMemoryPool::Instance().Alloc(n));
+    }
+    
+    ~FixedSizePoolBufferData() {
+        if (_data) {
+            ConcurrentFixedSizeMemoryPool::Instance().Dealloc(_data);
+            _data = nullptr;
         }
-	}
-
-	~DefaultBufferData() {
-		if (_data) {
-            delete[] _data;
-			_data = nullptr;
-		}
-	}
-
-	virtual uint32_t Capacity() const {
-		return _capacity;
-	}
-
-    virtual void* Data() {
-        return _data;
     }
     
-    virtual const void* Data() const {
-        return _data;
-    }
-
-    virtual MemoryPolicy Policy() const {
-        return MemoryPolicy::Default;
-    }
-};//class DefaultBufferData
+    virtual uint32_t Capacity() const override { return _capacity; }
     
+    virtual const void* Data() const override { return _data; }
+    
+    virtual void* Data() override { return _data; }
+    
+    virtual std::shared_ptr<IBufferData> Make(uint32_t size) override { return std::make_shared<FixedSizePoolBufferData>(size); }
+};//class FixedSizePoolBufferData
 
-std::shared_ptr<IBufferData> IBufferData::Make(uint32_t n, MemoryPolicy policy) {
-    if (policy == MemoryPolicy::Pool) {
-        return std::make_shared<PoolBufferData>(n);
-    }
-    else {
-        return std::make_shared<DefaultBufferData>(n);
-    }
-}
 
 
 Buffer::Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos)
@@ -104,20 +109,11 @@ Buffer::Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t en
     assert(beginPos <= endPos);
 }
 
-Buffer::Buffer(uint32_t n, MemoryPolicy memPolicy)
-    : _data()
+Buffer::Buffer(std::shared_ptr<IBufferData> data, const void* ptr, uint32_t size)
+    : _data(data)
     , _beginPos(0)
     , _endPos(0) {
-    _data = IBufferData::Make(n, memPolicy);
-}
-
-Buffer::Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy)
-    : _data()
-    , _beginPos(0)
-    , _endPos(0) {
-    _data = IBufferData::Make(size, memPolicy);
-
-    this->Write(data, size);
+    this->Write(ptr, size);
 }
 
 uint32_t Buffer::Capacity() const {
@@ -191,22 +187,21 @@ uint32_t Buffer::Written(uint32_t n) {
     return bytes;
 }
 
-uint32_t Buffer::Write(const void* data, uint32_t n) {
+uint32_t Buffer::Write(const void* ptr, uint32_t n) {
     auto bytes = std::min(n, this->Available());
-    std::memcpy(this->PosToWrite(), data, bytes);
+    std::memcpy(this->PosToWrite(), ptr, bytes);
     _endPos += bytes;
     return bytes;
 }
 
-uint32_t Buffer::WriteAtPos(const void* data, uint32_t n, uint32_t pos) {
+uint32_t Buffer::WriteAtPos(const void* ptr, uint32_t n, uint32_t pos) {
     if (pos >= _endPos) {
         this->SkipPosToWrite(pos - _endPos);
-        return this->Write(data, n);
-    }
-    else {
+        return this->Write(ptr, n);
+    } else {
         const auto oldEndPos = _endPos;
         this->SkipPosToWrite(pos - _endPos);
-        const auto writtenBytes = this->Write(data, n);
+        const auto writtenBytes = this->Write(ptr, n);
         
         if (_endPos < oldEndPos) {
             _endPos = oldEndPos;
@@ -230,21 +225,23 @@ Buffer Buffer::Duplicate(uint32_t pos, uint32_t n) const {
         const auto endPos = std::min(pos + n, _endPos);
         
         return Buffer(_data, pos, endPos);
-    }
-    else {
-        return Buffer(0, _data->Policy());
+    } else {
+        return Buffer(_data->Make(0));
     }
 }
 
 Buffer Buffer::Clone() const {
-    return Buffer(this->PosToRead(), this->Size(), _data->Policy());
+    return Buffer(_data->Make(this->Size()), this->PosToRead(), this->Size());
 }
 
 Buffer BufferFactory::MakeDefaultBuffer(uint32_t n) {
-    return Buffer(n, MemoryPolicy::Default);
-    //return makePoolBuffer(n);
+    return Buffer(std::make_shared<DefaultBufferData>(n));
 }
 
 Buffer BufferFactory::MakePoolBuffer(uint32_t n) {
-    return Buffer(n, MemoryPolicy::Pool);
+    return Buffer(std::make_shared<PoolBufferData>(n));
+}
+
+Buffer BufferFactory::MakeFixedSizePoolBuffer(uint32_t n) {
+    return Buffer(std::make_shared<FixedSizePoolBufferData>(n));
 }

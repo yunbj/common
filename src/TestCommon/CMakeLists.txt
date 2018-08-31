@@ -39,6 +39,7 @@ set(COMMON_HEADER_FILES
 	../../include/base/FileSystem.h
 	../../include/base/Gcd.h
 	../../include/base/MemoryPool.h
+	../../include/base/ConcurrentFixedSizeMemoryPool.h
 	../../include/base/ILogWriter.h
 	../../include/base/LogMgr.h
 	../../include/base/Pipe.h
@@ -61,6 +62,7 @@ set(COMMON_SRC_FILES
 	../base/Config.cpp
 	../base/FileSystem.cpp
 	../base/MemoryPool.cpp
+	../base/ConcurrentFixedSizeMemoryPool.cpp
 	../base/Gcd.cpp
 	../base/LogMgr.cpp
 	../base/Pipe.cpp
@@ -86,6 +88,7 @@ set(UNITTEST_COMMON_SRC_FILES
 	${COMMON_SRC_FILES}
 	${UNITTEST_COMMON_HEADER_FILES}
 	TestBuffer.cpp
+	TestCFSMemoryPool.cpp
 	TestFileSystem.cpp
 	TestGcd.cpp
 	TestMemoryPool.cpp
@@ -104,6 +107,9 @@ if (APPLE)
 #set(CMAKE_CXX_COMPILER "g++")
 #set(CMAKE_AR_COMPILER "ar")
 #set(CMAKE_LD_COMPILER "g++")
+	set(TBB_LINK_DIR ../../lib/tbb/mac64)
+else ()
+	set(TBB_LINK_DIR ../../lib/tbb/x64)
 endif()
 
 
@@ -123,6 +129,8 @@ endif()
 
 
 # 공통 링크 라이브러리 디렉토리 (-L)
+link_directories(${TBB_LINK_DIR})
+
 
 # 출력 디렉토리
 
@@ -132,10 +140,11 @@ add_executable(${UNITTEST_COMMON} ${UNITTEST_COMMON_SRC_FILES})
 
 # 공통 링크 라이브러리 (-l)
 if (APPLE)
-	target_link_libraries(${UNITTEST_COMMON} pthread)
+	target_link_libraries(${UNITTEST_COMMON} pthread tbb)
 elseif (UNIX)
-	target_link_libraries(${UNITTEST_COMMON} pthread stdc++fs)
+	target_link_libraries(${UNITTEST_COMMON} pthread tbb stdc++fs)
 endif()
 
 install(TARGETS ${UNITTEST_COMMON} DESTINATION bin)
+install(DIRECTORY ${TBB_LINK_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "*")
 

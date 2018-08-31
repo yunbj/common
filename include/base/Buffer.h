@@ -5,15 +5,10 @@
 #include <cstddef>
 
 
-namespace grid {
-    
-    enum class MemoryPolicy {
-        Default,
-        Pool
-    };//enum class MemoryPolicy
-    
-    
-    class IBufferData {
+namespace grid
+{
+    class IBufferData
+    {
     public:
         virtual ~IBufferData() = default;
         
@@ -23,10 +18,7 @@ namespace grid {
         
         virtual void* Data() = 0;
         
-        virtual MemoryPolicy Policy() const = 0;
-        
-    public:
-        static std::shared_ptr<IBufferData> Make(uint32_t n, MemoryPolicy policy);
+        virtual std::shared_ptr<IBufferData> Make(uint32_t size) = 0;
     };//class IBufferData
     
     
@@ -37,13 +29,13 @@ namespace grid {
         uint32_t _endPos = 0;
 
     private:
-        Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos, uint32_t endPos);
+        friend class BufferFactory;
+        
+        explicit Buffer(std::shared_ptr<IBufferData> data, uint32_t beginPos = 0, uint32_t endPos = 0);
+        
+        Buffer(std::shared_ptr<IBufferData> data, const void* ptr, uint32_t size);
         
 	public:
-        Buffer(uint32_t n, MemoryPolicy memPolicy);
-        
-        Buffer(const void* data, uint32_t size, MemoryPolicy memPolicy);
-        
         uint32_t Capacity() const;
 
         //length of data
@@ -83,11 +75,11 @@ namespace grid {
         
 		//endPos will be moved automatically after writting
         //return actually written bytes
-		uint32_t Write(const void* data, uint32_t n);
+		uint32_t Write(const void* ptr, uint32_t n);
         
         //pos가 end pos보다 크면 skip후 write
         //pos가 end pos보다 작으면 overwrite 후 end pos 조정
-        uint32_t WriteAtPos(const void* data, uint32_t n, uint32_t pos);
+        uint32_t WriteAtPos(const void* ptr, uint32_t n, uint32_t pos);
         
         uint32_t WriteFromBuffer(const Buffer& buffer, uint32_t pos, uint32_t n);
         
@@ -106,6 +98,8 @@ namespace grid {
 		static Buffer MakeDefaultBuffer(uint32_t n);
 
         static Buffer MakePoolBuffer(uint32_t n);
+        
+        static Buffer MakeFixedSizePoolBuffer(uint32_t n);
     };//class BufferFactory
 }//namespace grid
 

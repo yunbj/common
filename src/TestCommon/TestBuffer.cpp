@@ -12,18 +12,24 @@
 using namespace grid;
 
 
+static Buffer MakeBuffer(std::size_t n) {
+    //return BufferFactory::MakeDefaultBuffer(n);
+    //return BufferFactory::MakePoolBuffer(n);
+    return BufferFactory::MakeFixedSizePoolBuffer(n);
+}
+
 void TestBuffer::DoTest() {
     std::cout << "============= start Buffer test ===============" << std::endl;
     
 	const uint32_t cap = 23;
 	const std::string data = "0123456789";
 
-	auto buffer = BufferFactory::MakeDefaultBuffer(cap);
+	auto buffer = MakeBuffer(cap);
 	assert(buffer.Capacity() == cap);
 
     //empty buffer
     {
-        auto buffer = BufferFactory::MakeDefaultBuffer(0);
+        auto buffer = MakeBuffer(0);
         assert(buffer.Capacity() == 0);
         assert(buffer.Size() == 0);
         assert(buffer.Write(data.c_str(), data.length()) == 0);
@@ -33,7 +39,7 @@ void TestBuffer::DoTest() {
     
     //AdjustToSize
     {
-        auto buffer = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer = MakeBuffer(cap);
         
         assert(buffer.Write(data.c_str(), data.length()) == data.length());
         
@@ -134,7 +140,7 @@ void TestBuffer::DoTest() {
 
     //Duplicate 2
     {
-        auto buffer = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer = MakeBuffer(cap);
         
         assert(buffer.Write(data.c_str(), data.length()) == data.length());
 
@@ -151,7 +157,7 @@ void TestBuffer::DoTest() {
     
     //Duplicate 3
     {
-        auto buffer = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer = MakeBuffer(cap);
         
         assert(buffer.Write(data.c_str(), data.length()) == data.length());
         
@@ -187,7 +193,7 @@ void TestBuffer::DoTest() {
         const uint32_t cap = 100;
         const std::string data = "0123456789";
         
-        auto buffer = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer = MakeBuffer(cap);
         assert(buffer.Capacity() == cap);
         
         assert(data.length() == buffer.Write(data.c_str(), data.length()));
@@ -229,13 +235,13 @@ void TestBuffer::DoTest() {
         const uint32_t cap = 100;
         const std::string data = "0123456789";
         
-        auto buffer1 = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer1 = MakeBuffer(cap);
         assert(data.length() == buffer1.Write(data.c_str(), data.length()));
 
         const uint32_t skipBytes = 3;
         const uint32_t len = 4;
         
-        auto buffer2 = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer2 = MakeBuffer(cap);
         assert(len == buffer2.WriteFromBuffer(buffer1, skipBytes, len));
         assert(buffer2.Size() == len);
         assert(std::memcmp(buffer2.PosToRead(), data.substr(skipBytes, len).c_str(), len) == 0);
@@ -248,13 +254,13 @@ void TestBuffer::DoTest() {
         const uint32_t cap = 100;
         const std::string data = "0123456789";
         
-        auto buffer1 = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer1 = MakeBuffer(cap);
         assert(data.length() == buffer1.Write(data.c_str(), data.length()));
         
         const uint32_t skipBytes = 3;
         const uint32_t len = data.length() - skipBytes;
         
-        auto buffer2 = BufferFactory::MakeDefaultBuffer(cap);
+        auto buffer2 = MakeBuffer(cap);
         assert(len == buffer2.WriteFromBuffer(buffer1, skipBytes, data.length()));
         assert(buffer2.Size() == len);
         assert(std::memcmp(buffer2.PosToRead(), data.substr(skipBytes, len).c_str(), len) == 0);

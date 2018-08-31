@@ -5,9 +5,11 @@
 #include <memory>
 #include <atomic>
 #include <thread>
+#include <numeric>
+#include <iomanip>
 #include "base/Buffer.h"
 #include "base/Gcd.h"
-
+#include "base/ConcurrentFixedSizeMemoryPool.h"
 
 using namespace grid;
 
@@ -40,7 +42,7 @@ int main(int argc, char* argv[])
     std::cout << std::endl << std::endl;
 
     //init
-    std::list<std::shared_ptr<Gcd>> gcds;
+    std::vector<std::shared_ptr<Gcd>> gcds;
     for (uint32_t i = 0; i < threadCount; ++i) {
         auto gcd = std::make_shared<Gcd>();
         if (gcd->Init() != 0) {
@@ -56,40 +58,62 @@ int main(int argc, char* argv[])
         
         std::function<Buffer (std::size_t)> maker;
         if (i == 0) {
-            maker = &BufferFactory::MakeDefaultBuffer;
-            makerName = "BufferFactory::MakeDefaultBuffer";
-        } else if (i == 1) {
             maker = &BufferFactory::MakeFixedSizePoolBuffer;
             makerName = "BufferFactory::MakeFixedSizePoolBuffer";
+        } else if (i == 1) {
+            maker = &BufferFactory::MakeDefaultBuffer;
+            makerName = "BufferFactory::MakeDefaultBuffer";
         } else if (i == 2) {
             maker = &BufferFactory::MakePoolBuffer;
             makerName = "BufferFactory::MakePoolBuffer";
         }
         
-        std::cout << "* started(" << makerName << ")" << std::endl;
+        std::vector<uint32_t> gcdRunCounts(threadCount, 0);
+        std::atomic_int gcdDoneCount = 0;
         
+
+        std::cout << "* started(" << makerName << ")" << std::endl;
         const auto started = std::chrono::system_clock::now();
         
-        std::atomic_int done = 0;
-        
-        for (auto gcd : gcds) {
-            gcd->DispatchAsync([allocCount, maker, kData, sizes, &done]() {
+        for (int i = 0; i < threadCount; ++i) {
+            auto& gcd = gcds[i];
+            auto& runCount = gcdRunCounts[i];
+            
+            gcd->DispatchAsync([allocCount, maker, kData, sizes, &gcdDoneCount, &runCount]() {
                 for (uint32_t i = 0; i < allocCount; ++i) {
                     const auto index = std::rand() % sizes.size();
                     auto buffer = maker(sizes[index]);
                     std::memcpy(buffer.PosToWrite(), kData.c_str(), kData.length());
                     buffer.Written(kData.length());
+                    
+                    ++runCount;
                 }
-                ++done;
+                ++gcdDoneCount;
             });
         }
         
-        while (done != gcds.size()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        bool complete = false;
+        while (!complete) {
+            for (int i = 0; i < 1000; ++i) {
+                if (gcdDoneCount == threadCount) {
+                    complete = true;
+                    break;
+                }
+                
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+            
+            //std::cout << ".";
+            
+            uint32_t sumCounts = std::accumulate(gcdRunCounts.begin(), gcdRunCounts.end(), 0);
+            std::cout << "- progress: " << std::setprecision(3) << 100.0f * sumCounts / (allocCount * threadCount) << "%" << std::endl;
+        }
+        
+        if (i == 0) {
+            std::cout << "* pool count = " << ConcurrentFixedSizeMemoryPool::Instance().GetPoolCount() << ", size = " << ConcurrentFixedSizeMemoryPool::Instance().GetSize() << std::endl;
         }
         
         const auto ended = std::chrono::system_clock::now();
-        
         std::cout << "* elapsed = " << (ended - started).count() / 1000 << "msec" << std::endl << std::endl;
     }
 

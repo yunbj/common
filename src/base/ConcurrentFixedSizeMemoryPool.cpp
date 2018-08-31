@@ -28,6 +28,10 @@ void* ConcurrentFixedSizeMemoryPool::Alloc(std::size_t n) {
         n = 1;
     }
     
+    static const std::size_t kPoolCountPerSize = 50;
+    
+    n += (_hasher(std::this_thread::get_id()) % kPoolCountPerSize);
+    
     //find or create pool
     Pool_t& pool = _pools[n];
     

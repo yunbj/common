@@ -2,6 +2,7 @@
 
 
 #include <cstddef>
+#include <thread>
 #include <tbb/concurrent_unordered_map.h>
 #include <tbb/concurrent_queue.h>
 #include <tbb/atomic.h>
@@ -56,8 +57,9 @@ namespace grid
         using Pool_t = tbb::concurrent_queue<uint8_t*>;
         
         tbb::concurrent_unordered_map<std::size_t, Pool_t> _pools;
-        tbb::atomic<uint64_t> _totalSize;
-        
+        tbb::atomic<uint64_t> _totalSize = 0;
+        std::hash<std::thread::id> _hasher;
+
         //using PoolAccessor = decltype(_pools)::accessor;
     };//class ConcurrentFixedSizeMemoryPool
 }//namespace grid

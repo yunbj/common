@@ -27,6 +27,7 @@ include_directories(../../include)
 # 빌드 대상 바이너리 파일명 및 소스 파일 목록
 set(COMMON "${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 set(UNITTEST_COMMON ${COMMON}_unittest)
+set(PERF_BUFFER perf_buffer)
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 	set(UNITTEST_COMMON ${UNITTEST_COMMON}d)
 endif()
@@ -98,6 +99,10 @@ set(UNITTEST_COMMON_SRC_FILES
 	main.cpp
 	)
 
+set(PERF_BUFFER_SRC_FILES
+	${COMMON_SRC_FILES}
+	perf_buffer_main.cpp
+	)
 
 # 공통 컴파일러
 set(CMAKE_CXX_STANDARD 17)
@@ -137,6 +142,7 @@ link_directories(${TBB_LINK_DIR})
  
 # 빌드 대상 바이너리 추가
 add_executable(${UNITTEST_COMMON} ${UNITTEST_COMMON_SRC_FILES})
+add_executable(${PERF_BUFFER} ${PERF_BUFFER_SRC_FILES})
 
 # 공통 링크 라이브러리 (-l)
 if (APPLE)
@@ -145,6 +151,10 @@ elseif (UNIX)
 	target_link_libraries(${UNITTEST_COMMON} pthread tbb stdc++fs)
 endif()
 
+target_link_libraries(${PERF_BUFFER} pthread tbb)
+
+
 install(TARGETS ${UNITTEST_COMMON} DESTINATION bin)
+install(TARGETS ${PERF_BUFFER} DESTINATION bin)
 install(DIRECTORY ${TBB_LINK_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "*")
 

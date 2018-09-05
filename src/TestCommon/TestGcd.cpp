@@ -73,7 +73,6 @@ public:
 
 void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd) {
 	TestClass c(false);
-	auto ret = 0;
 
 	printf("=================  move test =====================\n");
 	c.value = 10;
@@ -86,7 +85,7 @@ void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd) {
 
 	c.value = 15;
 	printf("\nmove dispatch sync.\n");
-	ret = gcd->DispatchSync([c = std::move(c)]{
+	gcd->DispatchSync([c = std::move(c)]{
 
 		printf("******* moved dispatch sync value : %d\n", c.value);
 	return 0;
@@ -112,7 +111,6 @@ void TestGcd::_TestMoveValue(std::shared_ptr<Gcd> gcd) {
 
 void TestGcd::_TestCopyValue(std::shared_ptr<Gcd> gcd) {
 	TestClass c(true);
-	auto ret = 0;
 
 	printf("=================  copy test =====================\n");
 	c.value = 10;
@@ -128,7 +126,7 @@ void TestGcd::_TestCopyValue(std::shared_ptr<Gcd> gcd) {
 
 	c.value = 15;
 	printf("\ncopy dispatch sync.\n");
-	ret = gcd->DispatchSync([c = c] {
+	gcd->DispatchSync([c = c] {
 
 		printf("******* copy dispatch sync value : %d\n", c.value);
 		return 0;

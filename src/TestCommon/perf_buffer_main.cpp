@@ -69,13 +69,13 @@ int main(int argc, char* argv[])
         }
         
         std::vector<uint32_t> gcdRunCounts(threadCount, 0);
-        std::atomic_int gcdDoneCount = 0;
+        std::atomic<uint32_t> gcdDoneCount = 0;
         
 
         std::cout << "* started(" << makerName << ")" << std::endl;
         const auto started = std::chrono::system_clock::now();
         
-        for (int i = 0; i < threadCount; ++i) {
+        for (uint32_t i = 0; i < threadCount; ++i) {
             auto& gcd = gcds[i];
             auto& runCount = gcdRunCounts[i];
             
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         
         bool complete = false;
         while (!complete) {
-            for (int i = 0; i < 1000; ++i) {
+            for (uint32_t i = 0; i < 1000; ++i) {
                 if (gcdDoneCount == threadCount) {
                     complete = true;
                     break;
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
         }
         
         const auto ended = std::chrono::system_clock::now();
-        std::cout << "* elapsed = " << (ended - started).count() / 1000 << "msec" << std::endl << std::endl;
+        std::cout << "* elapsed = " << (ended - started).count() / 1000 / 1000 << " msec" << std::endl << std::endl;
     }
 
     //fini

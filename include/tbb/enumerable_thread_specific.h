@@ -1,21 +1,21 @@
 /*
-    Copyright 2005-2017 Intel Corporation.  All Rights Reserved.
+    Copyright (c) 2005-2018 Intel Corporation
 
-    The source code contained or described herein and all documents related
-    to the source code ("Material") are owned by Intel Corporation or its
-    suppliers or licensors.  Title to the Material remains with Intel
-    Corporation or its suppliers and licensors.  The Material is protected
-    by worldwide copyright laws and treaty provisions.  No part of the
-    Material may be used, copied, reproduced, modified, published, uploaded,
-    posted, transmitted, distributed, or disclosed in any way without
-    Intel's prior express written permission.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    No license under any patent, copyright, trade secret or other
-    intellectual property right is granted to or conferred upon you by
-    disclosure or delivery of the Materials, either expressly, by
-    implication, inducement, estoppel or otherwise.  Any license under such
-    intellectual property rights must be express and approved by Intel in
-    writing.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+
+
+
 */
 
 #ifndef __TBB_enumerable_thread_specific_H
@@ -859,17 +859,17 @@ namespace interface6 {
                   , typename = typename internal::enable_if<internal::is_callable_no_args<typename internal::strip<Finit>::type>::value>::type
 #endif
         >
-        enumerable_thread_specific( Finit finit ) : my_construct_callback(
+        explicit enumerable_thread_specific( Finit finit ) : my_construct_callback(
             internal::callback_leaf<T,internal::construct_by_finit<T,Finit> >::make( tbb::internal::move(finit) )
         ){}
 
         //! Constructor with exemplar. Each local instance of T is copy-constructed from the exemplar.
-        enumerable_thread_specific( const T& exemplar ) : my_construct_callback(
+        explicit enumerable_thread_specific( const T& exemplar ) : my_construct_callback(
             internal::callback_leaf<T,internal::construct_by_exemplar<T> >::make( exemplar )
         ){}
 
 #if __TBB_ETS_USE_CPP11
-        enumerable_thread_specific( T&& exemplar ) : my_construct_callback(
+        explicit enumerable_thread_specific( T&& exemplar ) : my_construct_callback(
             internal::callback_leaf<T,internal::construct_by_exemplar<T> >::make( std::move(exemplar) )
         ){}
 
@@ -1088,7 +1088,7 @@ namespace interface6 {
         flattened2d( const Container &c, typename Container::const_iterator b, typename Container::const_iterator e ) :
             my_container(const_cast<Container*>(&c)), my_begin(b), my_end(e) { }
 
-        flattened2d( const Container &c ) :
+        explicit flattened2d( const Container &c ) :
             my_container(const_cast<Container*>(&c)), my_begin(c.begin()), my_end(c.end()) { }
 
         iterator begin() { return iterator(*my_container) = my_begin; }

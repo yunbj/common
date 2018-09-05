@@ -1,32 +1,32 @@
 /*
-    Copyright 2005-2017 Intel Corporation.  All Rights Reserved.
+    Copyright (c) 2005-2018 Intel Corporation
 
-    The source code contained or described herein and all documents related
-    to the source code ("Material") are owned by Intel Corporation or its
-    suppliers or licensors.  Title to the Material remains with Intel
-    Corporation or its suppliers and licensors.  The Material is protected
-    by worldwide copyright laws and treaty provisions.  No part of the
-    Material may be used, copied, reproduced, modified, published, uploaded,
-    posted, transmitted, distributed, or disclosed in any way without
-    Intel's prior express written permission.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    No license under any patent, copyright, trade secret or other
-    intellectual property right is granted to or conferred upon you by
-    disclosure or delivery of the Materials, either expressly, by
-    implication, inducement, estoppel or otherwise.  Any license under such
-    intellectual property rights must be express and approved by Intel in
-    writing.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+
+
+
 */
 
 #ifndef __TBB_tbb_stddef_H
 #define __TBB_tbb_stddef_H
 
 // Marketing-driven product version
-#define TBB_VERSION_MAJOR 2017
+#define TBB_VERSION_MAJOR 2018
 #define TBB_VERSION_MINOR 0
 
 // Engineering-focused interface version
-#define TBB_INTERFACE_VERSION 9104
+#define TBB_INTERFACE_VERSION 10005
 #define TBB_INTERFACE_VERSION_MAJOR TBB_INTERFACE_VERSION/1000
 
 // The oldest major interface version still supported
@@ -155,8 +155,8 @@ namespace tbb {
 
 #if TBB_USE_ASSERT
 
-    //! Assert that x is true.
-    /** If x is false, print assertion failure message.
+    //! Assert that predicate is true.
+    /** If predicate is false, print assertion failure message.
         If the comment argument is not NULL, it is printed as part of the failure message.
         The comment argument has no other effect. */
     #define __TBB_ASSERT(predicate,message) __TBB_ASSERT_RELEASE(predicate,message)
@@ -278,7 +278,7 @@ void __TBB_EXPORTED_FUNC handle_perror( int error_code, const char* aux_info );
     inline bool __TBB_false() { return false; }
     #define __TBB_TRY
     #define __TBB_CATCH(e) if ( tbb::internal::__TBB_false() )
-    #define __TBB_THROW(e) ((void)0)
+    #define __TBB_THROW(e) tbb::internal::suppress_unused_warning(e)
     #define __TBB_RETHROW() ((void)0)
 #endif /* !TBB_USE_EXCEPTIONS */
 
@@ -423,16 +423,23 @@ private:
 // Following is a set of classes and functions typically used in compile-time "metaprogramming".
 // TODO: move all that to a separate header
 
-#if __TBB_ALLOCATOR_TRAITS_PRESENT
-#include <memory> //for allocator_traits
+#if __TBB_ALLOCATOR_TRAITS_PRESENT || __TBB_CPP11_SMART_POINTERS_PRESENT
+#include <memory> // for allocator_traits, unique_ptr
 #endif
 
-#if __TBB_CPP11_RVALUE_REF_PRESENT || _LIBCPP_VERSION
-#include <utility> // for std::move
+#if __TBB_CPP11_RVALUE_REF_PRESENT || __TBB_CPP11_DECLTYPE_PRESENT || _LIBCPP_VERSION
+#include <utility> // for std::move, std::forward, std::declval
 #endif
 
 namespace tbb {
 namespace internal {
+
+#if __TBB_CPP11_SMART_POINTERS_PRESENT && __TBB_CPP11_RVALUE_REF_PRESENT && __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&&... args) {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+#endif
 
 //! Class for determining type of std::allocator<T>::value_type.
 template<typename T>
@@ -526,7 +533,7 @@ struct STATIC_ASSERTION_FAILED<true>; //intentionally left undefined to cause co
 //! @endcond
 }} // namespace tbb::internal
 
-#if    __TBB_STATIC_ASSERT_PRESENT
+#if __TBB_STATIC_ASSERT_PRESENT
 #define __TBB_STATIC_ASSERT(condition,msg) static_assert(condition,msg)
 #else
 //please note condition is intentionally inverted to get a bit more understandable error msg

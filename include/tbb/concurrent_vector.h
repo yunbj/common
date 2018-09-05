@@ -1,21 +1,21 @@
 /*
-    Copyright 2005-2017 Intel Corporation.  All Rights Reserved.
+    Copyright (c) 2005-2018 Intel Corporation
 
-    The source code contained or described herein and all documents related
-    to the source code ("Material") are owned by Intel Corporation or its
-    suppliers or licensors.  Title to the Material remains with Intel
-    Corporation or its suppliers and licensors.  The Material is protected
-    by worldwide copyright laws and treaty provisions.  No part of the
-    Material may be used, copied, reproduced, modified, published, uploaded,
-    posted, transmitted, distributed, or disclosed in any way without
-    Intel's prior express written permission.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    No license under any patent, copyright, trade secret or other
-    intellectual property right is granted to or conferred upon you by
-    disclosure or delivery of the Materials, either expressly, by
-    implication, inducement, estoppel or otherwise.  Any license under such
-    intellectual property rights must be express and approved by Intel in
-    writing.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+
+
+
 */
 
 #ifndef __TBB_concurrent_vector_H
@@ -31,19 +31,8 @@
 #include <new>
 #include <cstring>   // for memset()
 #include __TBB_STD_SWAP_HEADER
-
-#if !TBB_USE_EXCEPTIONS && _MSC_VER
-    // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-    #pragma warning (push)
-    #pragma warning (disable: 4530)
-#endif
-
 #include <algorithm>
 #include <iterator>
-
-#if !TBB_USE_EXCEPTIONS && _MSC_VER
-    #pragma warning (pop)
-#endif
 
 #if _MSC_VER==1500 && !__INTEL_COMPILER
     // VS2008/VC9 seems to have an issue; limits pull in math.h
@@ -85,7 +74,7 @@ namespace internal {
     //! Exception helper function
     template<typename T>
     void handle_unconstructed_elements(T* array, size_t n_of_elements){
-        std::memset( array, 0, n_of_elements * sizeof( T ) );
+        std::memset( static_cast<void*>(array), 0, n_of_elements * sizeof( T ) );
     }
 
     //! Base class of concurrent vector implementation.
@@ -1304,8 +1293,8 @@ void concurrent_vector<T, A>::move_array_if_noexcept( void* dst, const void* src
 template<typename T, class A>
 template<typename I>
 void concurrent_vector<T, A>::copy_range( void* dst, const void* p_type_erased_iterator, size_type n ){
-    I & iterator ((*const_cast<I*>(static_cast<const I*>(p_type_erased_iterator))));
-    internal_loop_guide loop(n, dst); loop.iterate(iterator);
+    internal_loop_guide loop(n, dst);
+    loop.iterate( *(static_cast<I*>(const_cast<void*>(p_type_erased_iterator))) );
 }
 
 template<typename T, class A>

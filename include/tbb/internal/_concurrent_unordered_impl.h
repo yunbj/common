@@ -1,21 +1,21 @@
 /*
-    Copyright 2005-2017 Intel Corporation.  All Rights Reserved.
+    Copyright (c) 2005-2018 Intel Corporation
 
-    The source code contained or described herein and all documents related
-    to the source code ("Material") are owned by Intel Corporation or its
-    suppliers or licensors.  Title to the Material remains with Intel
-    Corporation or its suppliers and licensors.  The Material is protected
-    by worldwide copyright laws and treaty provisions.  No part of the
-    Material may be used, copied, reproduced, modified, published, uploaded,
-    posted, transmitted, distributed, or disclosed in any way without
-    Intel's prior express written permission.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    No license under any patent, copyright, trade secret or other
-    intellectual property right is granted to or conferred upon you by
-    disclosure or delivery of the Materials, either expressly, by
-    implication, inducement, estoppel or otherwise.  Any license under such
-    intellectual property rights must be express and approved by Intel in
-    writing.
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+
+
+
 */
 
 /* Container implementations in this header are based on PPL implementations
@@ -29,22 +29,12 @@
 
 #include "../tbb_stddef.h"
 
-#if !TBB_USE_EXCEPTIONS && _MSC_VER
-    // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-    #pragma warning (push)
-    #pragma warning (disable: 4530)
-#endif
-
 #include <iterator>
 #include <utility>      // Need std::pair
 #include <functional>   // Need std::equal_to (in ../concurrent_unordered_*.h)
 #include <string>       // For tbb_hasher
 #include <cstring>      // Need std::memset
 #include __TBB_STD_SWAP_HEADER
-
-#if !TBB_USE_EXCEPTIONS && _MSC_VER
-    #pragma warning (pop)
-#endif
 
 #include "../atomic.h"
 #include "../tbb_exception.h"
@@ -668,7 +658,6 @@ protected:
     typedef typename Traits::value_type value_type;
     typedef typename Traits::key_type key_type;
     typedef typename Traits::hash_compare hash_compare;
-    typedef typename Traits::value_compare value_compare;
     typedef typename Traits::allocator_type allocator_type;
     typedef typename hash_compare::hasher hasher;
     typedef typename hash_compare::key_equal key_equal;
@@ -1210,8 +1199,8 @@ private:
 
     // Initialize the hash and keep the first bucket open
     void internal_init() {
-        // Allocate an array of segment pointers
-        memset(my_buckets, 0, pointers_per_table * sizeof(void *));
+        // Initialize the array of segment pointers
+        memset(my_buckets, 0, sizeof(my_buckets));
 
         // Initialize bucket 0
         raw_iterator dummy_node = my_solist.raw_begin();
@@ -1479,7 +1468,7 @@ private:
         if (my_buckets[segment] == NULL) {
             size_type sz = segment_size(segment);
             raw_iterator * new_segment = my_allocator.allocate(sz);
-            std::memset(new_segment, 0, sz*sizeof(raw_iterator));
+            std::memset(static_cast<void*>(new_segment), 0, sz*sizeof(raw_iterator));
 
             if (my_buckets[segment].compare_and_swap( new_segment, NULL) != NULL)
                 my_allocator.deallocate(new_segment, sz);

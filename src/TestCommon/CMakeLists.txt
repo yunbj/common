@@ -106,7 +106,7 @@ set(PERF_BUFFER_SRC_FILES
 
 # 공통 컴파일러
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_COMPILER "gcc")
+#set(CMAKE_C_COMPILER "gcc")
 
 if (APPLE)
 #set(CMAKE_CXX_COMPILER "g++")

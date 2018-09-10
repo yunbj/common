@@ -40,6 +40,10 @@ int Thread::Fini(bool bWaitUtilAllDispatched /* = false */) {
     return 0;
 }
 
+size_t Thread::GetNumOfPendings() const {
+    return _gcd ? _gcd->GetNumOfPendings() : 0;
+}
+
 void Thread::IncreaseRef() {
     ++_refCnt;
 }

@@ -32,6 +32,8 @@ namespace grid
 
         int Init(const DurationType &precision = std::chrono::milliseconds(10));
 
+        size_t GetNumOfPendings() const;
+
         void IncreaseRef();
         void ReleaseRef();
 

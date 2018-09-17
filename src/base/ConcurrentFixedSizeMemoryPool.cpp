@@ -1,20 +1,44 @@
 #include "base/ConcurrentFixedSizeMemoryPool.h"
+#include "base/LogMgr.h"
 #include <cstring>
 #include <cassert>
+#include <chrono>
+#include <algorithm>
 
 
 using namespace grid;
 
 //using concurrent_unordered_map
 
+ConcurrentFixedSizeMemoryPool::ConcurrentFixedSizeMemoryPool() {
+    assert(_gcd.Init() == 0);
+    _timerId = _gcd.CreateTimer(std::chrono::seconds(10), true, &ConcurrentFixedSizeMemoryPool::_Dump, this);
+    assert(_timerId > 0);
+}
+
 ConcurrentFixedSizeMemoryPool::~ConcurrentFixedSizeMemoryPool() {
-    this->Cleanup();
+    if (_timerId > 0) {
+        _gcd.DestroyTimer(_timerId);
+        _timerId = 0;
+    }
+
+    _gcd.Fini();
+
+    //this->Cleanup();
+}
+
+void ConcurrentFixedSizeMemoryPool::_Dump() {
+    DEBUG_LOG("# total pool size = %u MB, cfs_pool count = %u", _totalSize / 1024 / 1024, _pools.size());
+
+    for (auto& elem : _pools) {
+        DEBUG_LOG("cfs_pool: unit=%u, allocated count=%u, deallocated count=%u", elem.first, elem.second.first, elem.second.second.unsafe_size());
+    }
 }
 
 void ConcurrentFixedSizeMemoryPool::Cleanup() {
     for (auto& elem : _pools) {
         uint8_t* ptr = nullptr;
-        while (elem.second.try_pop(ptr)) {
+        while (elem.second.second.try_pop(ptr)) {
             delete[] ptr;
         }
     }
@@ -23,18 +47,21 @@ void ConcurrentFixedSizeMemoryPool::Cleanup() {
     _totalSize = 0;
 }
 
+std::size_t ConcurrentFixedSizeMemoryPool::AlignSize(std::size_t n) {
+    return ((n - 1) / kUnit + 1) * kUnit;
+}
+
 void* ConcurrentFixedSizeMemoryPool::Alloc(std::size_t n) {
     if (n == 0) {
         n = 1;
     }
-    
-    static const std::size_t kPoolCountPerSize = 50;
-    
-    n += (_hasher(std::this_thread::get_id()) % kPoolCountPerSize);
-    
+
+    n = AlignSize(n);
+
     //find or create pool
-    Pool_t& pool = _pools[n];
-    
+    PoolValue& value = _pools[n];
+    Pool_t& pool = value.second;
+
     //get or create memory
     uint8_t* ptr = nullptr;
     if (!pool.try_pop(ptr)) {
@@ -45,7 +72,9 @@ void* ConcurrentFixedSizeMemoryPool::Alloc(std::size_t n) {
         //write header
         std::memcpy(ptr, &n, kHeaderLength);
     }
-    
+
+    ++value.first;//inc allocated count
+
     return _GetUserAddress(ptr);
 }
 
@@ -62,7 +91,7 @@ void ConcurrentFixedSizeMemoryPool::Dealloc(void* ptr) {
     
     auto it = _pools.find(n);
     if (it != _pools.end()) {
-        it->second.push(addr);
+        it->second.second.push(addr);
     } else {
         assert(false);
     }
@@ -79,7 +108,7 @@ std::size_t ConcurrentFixedSizeMemoryPool::GetPoolCount() const {
 std::size_t ConcurrentFixedSizeMemoryPool::GetAvailCount(std::size_t n) const {
     auto it = _pools.find(n);
     if (it != _pools.end()) {
-        return it->second.unsafe_size();
+        return it->second.second.unsafe_size();
     } else {
         return 0;
     }

@@ -20,8 +20,8 @@ static Buffer MakeBuffer(std::size_t n) {
 
 void TestBuffer::DoTest() {
     std::cout << "============= start Buffer test ===============" << std::endl;
-    
-	const uint32_t cap = 23;
+
+    uint32_t cap = 23;
 	const std::string data = "0123456789";
 
 	auto buffer = MakeBuffer(cap);

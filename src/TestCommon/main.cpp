@@ -37,7 +37,9 @@ void help(char *argv)
 
 int main(int argc, char* argv[])
 {
-	//INIT_LOG_MGR(log::LOG_LEVEL::LOG_DEBUG, log::LOG_WRITER_TYPE::LOG_WRITER_ALL);
+	INIT_LOG_MGR(log::LOG_LEVEL::LOG_DEBUG, log::LOG_WRITER_TYPE::LOG_WRITER_ALL);
+
+	/*
 	TestStringHelper sh;
 	sh.DoTest();
 
@@ -46,13 +48,14 @@ int main(int argc, char* argv[])
 
 	//TestGcd tg;
 	//tg.DoTest();
+    */
 
     TestBuffer tb;
     tb.DoTest();
     
     TestMemoryPool mp;
     mp.DoTest();
-    
+
     TestCFSMemoryPool cfsmp;
     cfsmp.DoTest();
     
@@ -61,7 +64,7 @@ int main(int argc, char* argv[])
 	{
 		std::this_thread::sleep_for(100ms);
 
-		DEBUG_LOG(_T("sleep 100ms."));
+		//DEBUG_LOG(_T("sleep 100ms."));
 	}
 
 #if !defined(_WIN32)
@@ -71,7 +74,7 @@ int main(int argc, char* argv[])
 
 	//getchar();
 
-	//UNINIT_LOG_MGR();
+	UNINIT_LOG_MGR();
 
 
     tprintf(_T("Test set Complete....\n"));

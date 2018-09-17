@@ -28,10 +28,10 @@ ConcurrentFixedSizeMemoryPool::~ConcurrentFixedSizeMemoryPool() {
 }
 
 void ConcurrentFixedSizeMemoryPool::_Dump() {
-    DEBUG_LOG("# total pool size = %u MB, cfs_pool count = %u", _totalSize / 1024 / 1024, _pools.size());
+    INFO_LOG("# total pool size = %u MB, cfs_pool count = %u", _totalSize / 1024 / 1024, _pools.size());
 
     for (auto& elem : _pools) {
-        DEBUG_LOG("cfs_pool: unit=%u, allocated count=%u, deallocated count=%u", elem.first, elem.second.first, elem.second.second.unsafe_size());
+        INFO_LOG("cfs_pool: unit=%u, allocated count=%u, deallocated count=%u", elem.first, elem.second.first, elem.second.second.unsafe_size());
     }
 }
 

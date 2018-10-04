@@ -4,9 +4,14 @@
 
 #include <base/Thread.h>
 #include <base/LogMgr.h>
+#include <base/IThreadPoolImpl.h>
 
 using namespace std;
 using namespace grid;
+
+Thread::Thread(std::shared_ptr<grid::IThreadPoolImpl> threadPool) : _threadPool(threadPool) {
+
+}
 
 Thread::~Thread() {
     Fini(false);
@@ -40,15 +45,26 @@ int Thread::Fini(bool bWaitUtilAllDispatched /* = false */) {
     return 0;
 }
 
+void Thread::Free() {
+
+    if(auto threadPool = _threadPool.lock()) {
+
+        threadPool->Free(shared_from_this());
+    }
+}
+
 size_t Thread::GetNumOfPendings() const {
+
     return _gcd ? _gcd->GetNumOfPendings() : 0;
 }
 
 void Thread::IncreaseRef() {
+
     ++_refCnt;
 }
 
 void Thread::ReleaseRef() {
+
     --_refCnt;
 }
 

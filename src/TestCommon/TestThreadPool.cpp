@@ -4,6 +4,7 @@
 
 #include "TestThreadPool.h"
 #include <base/ThreadPool.h>
+#include <base/Thread.h>
 #include <assert.h>
 
 using namespace std;
@@ -25,4 +26,11 @@ void TestThreadPool::DoTest() {
 
     auto thr = pool->Alloc();
     pool->Free(thr);
+
+    assert(pool->GetAllocatedThreadCount() == 0);
+
+    std::shared_ptr<Thread> selfFree = pool->Alloc();
+    selfFree->Free();
+
+    assert(pool->GetAllocatedThreadCount() == 0);
 }

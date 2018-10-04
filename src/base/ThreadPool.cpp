@@ -18,11 +18,11 @@ ThreadPool::ThreadPool(ThreadPoolType type) {
 
     if(type == ThreadPoolType::ROUNDROBIN)
     {
-        _pImpl = make_unique<StlRoundRobinImpl>();
+        _pImpl = make_shared<StlRoundRobinImpl>();
     }
     else if(type == ThreadPoolType::REFBASED)
     {
-        _pImpl = make_unique<StlRefBasedImpl>();
+        _pImpl = make_shared<StlRefBasedImpl>();
     }
     else
     {
@@ -57,4 +57,9 @@ ThreadPtr ThreadPool::Alloc() {
 void ThreadPool::Free(ThreadPtr thr) {
 
     _pImpl->Free(thr);
+}
+
+int32_t ThreadPool::GetAllocatedThreadCount() {
+
+    return _pImpl->GetAllocatedThreadCount();
 }

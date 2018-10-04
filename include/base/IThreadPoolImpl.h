@@ -22,6 +22,8 @@ namespace grid {
 
         virtual ThreadPtr Alloc() = 0;
         virtual void Free(ThreadPtr thr) = 0;
+
+        virtual int32_t GetAllocatedThreadCount() = 0;
     };
 } // namespace grid
 

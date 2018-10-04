@@ -16,7 +16,10 @@ namespace grid
 {
     class StlRoundRobinImpl;
     class StlRefBasedImpl;
-    class Thread {
+    class IThreadPoolImpl;
+
+    class Thread : public std::enable_shared_from_this<Thread>
+    {
         friend StlRoundRobinImpl;
         friend StlRefBasedImpl;
 
@@ -26,18 +29,16 @@ namespace grid
         using Gcd = grid::Gcd;
         using GcdPtr = std::unique_ptr<Gcd>;
 
+        using ThreadPtr = std::shared_ptr<Thread>;
+
     public:
-        Thread() {};
+        Thread(std::shared_ptr<IThreadPoolImpl> threadPool);
         ~Thread();
 
-        int Init(const DurationType &precision = std::chrono::milliseconds(10));
-
-        size_t GetNumOfPendings() const;
-
-        void IncreaseRef();
-        void ReleaseRef();
+        void Free();
 
         int GetRef();
+        size_t GetNumOfPendings() const;
 
         template<class Fn, class...Args>
         int DispatchAsync(Fn &&fn, Args &&... args) {
@@ -74,10 +75,15 @@ namespace grid
 
     private:
         // for threadpool
+        int Init(const DurationType &precision = std::chrono::milliseconds(10));
         int Fini(bool bWaitUtilAllDispatched = false);
+        void IncreaseRef();
+        void ReleaseRef();
 
         GcdPtr _gcd;
         std::atomic_int _refCnt = 0;
+
+        std::weak_ptr<IThreadPoolImpl> _threadPool;
 
     };
 

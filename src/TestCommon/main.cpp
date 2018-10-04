@@ -16,6 +16,7 @@
 #include "TestBuffer.h"
 #include "TestMemoryPool.h"
 #include "TestCFSMemoryPool.h"
+#include "TestThreadPool.h"
 
 #if !defined(trpintf)
 #if defined(UNICODE)
@@ -49,6 +50,9 @@ int main(int argc, char* argv[])
 	//TestGcd tg;
 	//tg.DoTest();
     */
+
+	TestThreadPool tp;
+	tp.DoTest();
 
     TestBuffer tb;
     tb.DoTest();

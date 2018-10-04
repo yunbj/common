@@ -9,7 +9,7 @@
 
 namespace grid
 {
-    class StlRoundRobinImpl : public IThreadPoolImpl
+    class StlRoundRobinImpl : public IThreadPoolImpl, public std::enable_shared_from_this<StlRoundRobinImpl>
     {
     public:
         StlRoundRobinImpl();
@@ -21,13 +21,15 @@ namespace grid
         virtual ThreadPtr Alloc() override;
         virtual void Free(ThreadPtr thr) override;
 
+        virtual int32_t GetAllocatedThreadCount() override;
+
     private:
         struct Impl;
         std::unique_ptr<Impl>   _pImpl;
     };
 
 
-    class StlRefBasedImpl : public IThreadPoolImpl
+    class StlRefBasedImpl : public IThreadPoolImpl, public std::enable_shared_from_this<StlRefBasedImpl>
     {
     public:
         StlRefBasedImpl();
@@ -38,6 +40,8 @@ namespace grid
 
         virtual ThreadPtr Alloc() override;
         virtual void Free(ThreadPtr thr) override;
+
+        virtual int32_t GetAllocatedThreadCount() override;
 
     private:
         struct Impl;

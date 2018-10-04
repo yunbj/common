@@ -40,7 +40,7 @@ int StlRoundRobinImpl::Init(int32_t cnt) {
 
     for(auto i = 0; i < cnt; ++i)
     {
-        ThreadPtr thr = make_shared<Thread>();
+        ThreadPtr thr = make_shared<Thread>(shared_from_this());
         _pImpl->threads[i] = thr;
 
         auto ret = thr->Init();
@@ -91,6 +91,11 @@ void StlRoundRobinImpl::Free(ThreadPtr thr) {
     DEBUG_LOG("[threadpool] free thread. (allocated thread:%d, pool:%d)", cnt, _pImpl->thrCnt);
 }
 
+int32_t StlRoundRobinImpl::GetAllocatedThreadCount()
+{
+    return _pImpl->curAlloc;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // StlRefBasedImpl Implementaion
@@ -121,7 +126,7 @@ int StlRefBasedImpl::Init(int32_t cnt) {
 
     for (auto i = 0; i < cnt; ++i)
     {
-        ThreadPtr thr = make_shared<Thread>();
+        ThreadPtr thr = make_shared<Thread>(shared_from_this());
 
         auto ret = thr->Init();
         if (ret != 0)
@@ -231,4 +236,10 @@ void StlRefBasedImpl::Free(ThreadPtr thr) {
     // debug
     auto cnt = --_pImpl->curAlloc;
     DEBUG_LOG("[threadpool] free thread. (allocated thread:%d, pool:%d)", cnt, _pImpl->thrCnt);
+}
+
+
+int32_t StlRefBasedImpl::GetAllocatedThreadCount()
+{
+    return _pImpl->curAlloc;
 }

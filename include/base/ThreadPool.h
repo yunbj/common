@@ -17,9 +17,11 @@ namespace grid
 
     class Gcd;
     class Thread;
+    //////////////////////////////////////////////////////////////////
+    // thread pool interface
     class IThreadPool  {
     protected:
-        using ImplPtr = std::unique_ptr<IThreadPoolImpl>;
+        using ImplPtr = std::shared_ptr<IThreadPoolImpl>;
         using ThreadPtr = std::shared_ptr<Thread>;
 
     public :
@@ -31,8 +33,11 @@ namespace grid
 
         virtual ThreadPtr Alloc() = 0;
         virtual void Free(ThreadPtr thr) = 0;
+        virtual int32_t GetAllocatedThreadCount() = 0;
     };
 
+    //////////////////////////////////////////////////////////////////
+    // thread pool
     class ThreadPool : public IThreadPool {
     public :
 
@@ -44,6 +49,8 @@ namespace grid
 
         virtual ThreadPtr Alloc() override;
         virtual void Free(ThreadPtr thr) override;
+
+        int32_t GetAllocatedThreadCount() override ;
 
     private:
         ImplPtr _pImpl;

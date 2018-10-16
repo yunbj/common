@@ -12,7 +12,7 @@ using namespace grid;
 
 ConcurrentFixedSizeMemoryPool::ConcurrentFixedSizeMemoryPool() {
     assert(_gcd.Init() == 0);
-    _timerId = _gcd.CreateTimer(std::chrono::seconds(10), true, &ConcurrentFixedSizeMemoryPool::_Dump, this);
+    _timerId = _gcd.CreateTimer(std::chrono::seconds(60), true, &ConcurrentFixedSizeMemoryPool::_Dump, this);
     assert(_timerId > 0);
 }
 

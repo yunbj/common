@@ -43,6 +43,7 @@ set(COMMON_HEADER_FILES
 	../../include/base/ConcurrentFixedSizeMemoryPool.h
 	../../include/base/ILogWriter.h
 	../../include/base/LogMgr.h
+	../../include/base/LogThread.h
 	../../include/base/Pipe.h
 	../../include/base/RunLoopForSignal.h
 	../../include/base/StringConvertor.h
@@ -61,11 +62,12 @@ set(COMMON_SRC_FILES
 	../base/Base.cpp
 	../base/Buffer.cpp
 	../base/Config.cpp
-	../base/FileSystem.cpp
+#	../base/FileSystemLinux.cpp
 	../base/MemoryPool.cpp
 	../base/ConcurrentFixedSizeMemoryPool.cpp
 	../base/Gcd.cpp
 	../base/LogMgr.cpp
+	../base/LogThread.cpp
 	../base/Pipe.cpp
 	../base/RunLoopForSignal.cpp
 	../base/StringConvertor.cpp
@@ -74,7 +76,11 @@ set(COMMON_SRC_FILES
 	../base/ThreadPool.cpp
 	../base/ThreadPoolImpl.cpp
 	)
-	
+if(WIN32)
+	set(COMMON_SRC_FILES ${COMMON_SRC_FILES} ../base/FileSystem.cpp)
+else(WIN32)
+	set(COMMON_SRC_FILES ${COMMON_SRC_FILES} ../base/FileSystemLinux.cpp)
+endif(WIN32)
 
 set(UNITTEST_COMMON_HEADER_FILES
 	TestBuffer.h

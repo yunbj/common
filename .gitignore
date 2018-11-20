@@ -5,3 +5,5 @@ DerivedData/
 *bin/
 *obj
 *.depend
+.idea
+cmake-build-debug

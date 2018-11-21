@@ -66,6 +66,12 @@ bool LogMgr::Init(int level, int type, size_t thrCnt) {
 
 void LogMgr::Uninit() {
 
+	if(_destroyed) {
+		return;
+	}
+
+	_destroyed = true;
+
 	// write lock
 	WRITE_LOCKGUARD_TYPE lock(_mtxThreads);
 	auto logThreads = std::move(_logThreads);

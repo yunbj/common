@@ -74,7 +74,7 @@ namespace grid {
 			template<class ...Args>
 			void WriteLog(const tchar * fileName, int line, int level, const tchar * pszFmt, Args&&... args) {
 
-				if (_logLevel.load() > level) {
+				if (_logLevel.load() > level || _destroyed == true) {
 
 					return;
 				}
@@ -109,8 +109,10 @@ namespace grid {
 			tstring _GetCurrentTimeStr();
 			tstring _GetCurrentThreadId();
 
+			std::atomic_bool	_destroyed = {false};
 			std::atomic_uint64_t _logSeq = {0};
 			std::atomic_int		_logLevel = {0};
+
 			int 				_logType = {0};
 			int     			_curThreadIndex = {0};
 

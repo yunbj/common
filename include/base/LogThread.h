@@ -10,7 +10,7 @@
 #include <base/Base.h>
 #include <base/Gcd.h>
 #include <base/ILogWriter.h>
-
+#include <time.h>	// localtime
 #include <memory>
 #include <set>
 #include <iomanip>
@@ -40,11 +40,11 @@ namespace grid
             void RegisterLogWriter(const ILogWriterPtr& writer);
             void UnregisterLogWriter(const ILogWriterPtr& pLogWriter);
 
-            void Write(uint64_t seq,
+            void Write(uint16_t seq,
                        const tstring& fileName,
                        int line,
                        int level,
-                       time_t curTime,
+                       std::time_t curTime,
                        const tstring& tid,
                        const tstring& writeTime,
                        const tstring& msg);
@@ -69,11 +69,11 @@ namespace grid
             tstring     _GetLogLevelStr(int level) const;
             bool        _IsSet(int type, int mask);
 
-            void _WriteLog(uint64_t seq,
+            void _WriteLog(uint16_t seq,
                            const tstring& fileName,
                            int line,
                            int level,
-                           time_t curTime,
+                           std::time_t curTime,
                            const tstring& tid,
                            const tstring& writeTime,
                            const tstring& msg);

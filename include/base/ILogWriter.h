@@ -1,6 +1,7 @@
 #pragma once
 
 #include <base/Base.h>
+#include <time.h>	// localtime
 
 namespace grid {
 
@@ -25,7 +26,14 @@ namespace grid {
 		class ILogWriter {
 		public:
 			virtual ~ILogWriter() = default;
-			virtual void Write(const tstring& strFileName, int nLine, int level, time_t curTime, const tstring& strTid, const tstring& strTime, const tstring& strMsg, const tstring& strCompletedLog) = 0;
+			virtual void Write(const tstring& strFileName,
+                               int nLine,
+                               int level,
+                               std::time_t curTime,
+                               const tstring& strTid,
+                               const tstring& strTime,
+                               const tstring& strMsg,
+                               const tstring& strCompletedLog) = 0;
 
 		};
 

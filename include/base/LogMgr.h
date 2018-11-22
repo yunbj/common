@@ -80,8 +80,8 @@ namespace grid {
 				}
 
 				tstring tid = _GetCurrentThreadId();
-				tstring strTime = _GetCurrentTimeStr();
-				time_t curTime = _GetTime();
+				tstring st;
+				std::time_t curTime = _GetCurrentTimeStr(st);
 
 				LogThreadPtr thr;
 				{
@@ -96,21 +96,19 @@ namespace grid {
 					++_curThreadIndex;
 				}
 
-
 				tstring buffer;
 				util::StringHelper::Format(buffer, pszFmt, args ...);
 
-				thr->Write(++_logSeq, fileName, line, level, curTime, tid, strTime, buffer);
+				thr->Write(++_logSeq, fileName, line, level, curTime, tid, st, buffer);
 			}
 
 		private:
 
-			time_t _GetTime();
-			tstring _GetCurrentTimeStr();
+			std::time_t _GetCurrentTimeStr(std::string& curTime);
 			tstring _GetCurrentThreadId();
 
 			std::atomic_bool	_destroyed = {false};
-			std::atomic_uint64_t _logSeq = {0};
+			std::atomic_uint16_t _logSeq = {0};
 			std::atomic_int		_logLevel = {0};
 
 			int 				_logType = {0};

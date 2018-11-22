@@ -2,10 +2,11 @@
 // Created by lacrimas on 18. 11. 19.
 //
 
+#include <base/LogThread.h>
+
 #include <string>
 #include <chrono>
 #include <sstream>
-#include <time.h>	// localtime
 #include <iomanip>  // put_time
 #include <stdarg.h>
 #include <iostream>
@@ -15,7 +16,6 @@
 #include <base/Base.h>
 #include <base/StringHelper.h>
 #include <base/FileSystem.h>
-#include <base/LogThread.h>
 
 #include <assert.h>
 
@@ -164,7 +164,7 @@ public:
     virtual void Write(const tstring& strFileName,
                        int nLine,
                        int level,
-                       time_t curTime,
+                       std::time_t curTime,
                        const tstring& strTid,
                        const tstring& strTime,
                        const tstring& strMsg,
@@ -221,7 +221,7 @@ public:
     virtual void Write(const tstring& strFileName,
                        int nLine,
                        int level,
-                       time_t curTime,
+                       std::time_t curTime,
                        const tstring& strTid,
                        const tstring& strTime,
                        const tstring& strMsg,
@@ -251,7 +251,7 @@ public:
     virtual void Write(const tstring& strFileName,
                        int nLine,
                        int level,
-                       time_t curTime,
+                       std::time_t curTime,
                        const tstring& strTid,
                        const tstring& strTime,
                        const tstring& strMsg,
@@ -301,7 +301,7 @@ private:
         return _fs.is_open();
     }
 
-    tstring _ConvertTimeToString(time_t curTime) {
+    tstring _ConvertTimeToString(std::time_t curTime) {
         tstringstream ss;
         struct tm time_info;
 
@@ -382,11 +382,11 @@ void LogThread::UnregisterLogWriter(const ILogWriterPtr& writer) {
     });
 }
 
-void LogThread::Write(uint64_t seq,
+void LogThread::Write(uint16_t seq,
                       const tstring& fileName,
                       int line,
                       int level,
-                      time_t curTime,
+                      std::time_t curTime,
                       const tstring& tid,
                       const tstring& writeTime,
                       const tstring& msg) {
@@ -470,11 +470,11 @@ tstring LogThread::_GetLogLevelStr(int level) const {
 }
 
 
-void LogThread::_WriteLog(uint64_t seq,
+void LogThread::_WriteLog(uint16_t seq,
                           const tstring& fileName,
                           int line,
                           int level,
-                          time_t curTime,
+                          std::time_t curTime,
                           const tstring& tid,
                           const tstring& writeTime,
                           const tstring& msg) {
@@ -493,11 +493,11 @@ void LogThread::_WriteLog(uint64_t seq,
     tstring fileInfo = util::StringHelper::Format(_T("%s(%u)"), fName.c_str(), line);
     tstring log;
 
-    util::StringHelper::Format(log, "%-30s : %5s [%020llu] [%s] (%s) %s\n",
+    util::StringHelper::Format(log, "%-30s : %5s [%s](%05u) (%s) %s\n",
                                fileInfo.c_str(),
                                _GetLogLevelStr(level).c_str(),
-                               seq,
                                writeTime.c_str(),
+                               seq,
                                tid.c_str(),
                                msg.c_str());
 

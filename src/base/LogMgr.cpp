@@ -149,35 +149,27 @@ void LogMgr::UnregisterLogWriter(const ILogWriterPtr& writer) {
 
 }
 
-time_t LogMgr::_GetTime() {
-
-	auto now = std::chrono::system_clock::now();
-	auto cur_time_t = std::chrono::system_clock::to_time_t(now);
-
-	return cur_time_t;
-}
-
-tstring LogMgr::_GetCurrentTimeStr() {
+std::time_t LogMgr::_GetCurrentTimeStr(std::string& curTime) {
 
 	using namespace std::chrono;
 
 	auto p = system_clock::now();
 	auto ms = duration_cast<milliseconds>(p.time_since_epoch());
 	auto s = duration_cast<seconds>(ms);
-	std::time_t tm_ = s.count();
-	struct tm lt;
-	//tm *plt = localtime_t(&tm_);
-	thread_safe_localtime(&tm_, &lt);
+	std::time_t t = s.count();
 
-	tchar t[100] = { 0, };
-	tsnprintf(t, 100, _T("%04d-%02d-%02d %02d:%02d:%02d.%03d"),
-			  lt.tm_year + 1900,
-			  lt.tm_mon + 1,
-			  lt.tm_mday,
-			  lt.tm_hour,
-			  lt.tm_min,
-			  lt.tm_sec,
-			  (unsigned)(ms.count() % 1000));
+	struct tm st;
+	thread_safe_localtime(&t, &st);
+
+	FORMAT(curTime, _T("%04d-%02d-%02d_%02d:%02d:%02d.%03d"),
+		   st.tm_year + 1900,
+		   st.tm_mon + 1,
+		   st.tm_mday,
+		   st.tm_hour,
+		   st.tm_min,
+		   st.tm_sec,
+		   (unsigned)(ms.count() % 1000));
+
 	return t;
 }
 

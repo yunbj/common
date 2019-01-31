@@ -58,6 +58,7 @@ set(BASE_SRC
         ${PROJECT_SOURCE_DIR}/src/base/Thread.cpp
         ${PROJECT_SOURCE_DIR}/src/base/ThreadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/base/ThreadPoolImpl.cpp
+	${PROJECT_SOURCE_DIR}/src/base/tinyxml2.cpp
         ${PLATFORM_SRC}
     )
 
@@ -77,6 +78,7 @@ set(BASE_HEADER
         ${PROJECT_SOURCE_DIR}/include/base/Thread.h
         ${PROJECT_SOURCE_DIR}/include/base/ThreadPool.h
         ${PROJECT_SOURCE_DIR}/include/base/ThreadPoolImpl.h
+	${PROJECT_SOURCE_DIR}/include/base/tinyxml2.h
         ${PLATFORM_HEADER}
     )
 

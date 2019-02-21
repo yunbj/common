@@ -37,6 +37,10 @@ namespace grid
         Buffer(std::shared_ptr<IBufferData> data, const void* ptr, uint32_t size);
         
 	public:
+        Buffer(const Buffer& rhs);
+
+        Buffer& operator=(const Buffer& rhs);
+
         uint32_t Capacity() const;
 
         //length of data

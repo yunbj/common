@@ -116,6 +116,19 @@ Buffer::Buffer(std::shared_ptr<IBufferData> data, const void* ptr, uint32_t size
     this->Write(ptr, size);
 }
 
+Buffer::Buffer(const Buffer& rhs)
+    : Buffer(rhs._data, rhs._beginPos, rhs._endPos) {
+}
+
+Buffer& Buffer::operator=(const Buffer& rhs) {
+    if (this != &rhs) {
+        _data = rhs._data;
+        _beginPos = rhs._beginPos;
+        _endPos = rhs._endPos;
+    }
+    return *this;
+}
+
 uint32_t Buffer::Capacity() const {
     return _data->Capacity();
 }

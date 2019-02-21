@@ -245,3 +245,33 @@ Buffer BufferFactory::MakePoolBuffer(uint32_t n) {
 Buffer BufferFactory::MakeFixedSizePoolBuffer(uint32_t n) {
     return Buffer(std::make_shared<FixedSizePoolBufferData>(n));
 }
+
+Buffer BufferFactory::MakeDefaultBuffer(const void* ptr, uint32_t n) {
+    Buffer buf = MakeDefaultBuffer(n);
+    buf.Write(ptr, n);
+    return buf;
+}
+
+Buffer BufferFactory::MakePoolBuffer(const void* ptr, uint32_t n) {
+    Buffer buf = MakePoolBuffer(n);
+    buf.Write(ptr, n);
+    return buf;
+}
+
+Buffer BufferFactory::MakeFixedSizePoolBuffer(const void* ptr, uint32_t n) {
+    Buffer buf = MakeFixedSizePoolBuffer(n);
+    buf.Write(ptr, n);
+    return buf;
+}
+
+Buffer BufferFactory::MakeDefaultBuffer(const std::string& str) {
+    return MakeDefaultBuffer(str.c_str(), str.length());
+}
+
+Buffer BufferFactory::MakePoolBuffer(const std::string& str) {
+    return MakePoolBuffer(str.c_str(), str.length());
+}
+
+Buffer BufferFactory::MakeFixedSizePoolBuffer(const std::string& str) {
+    return MakeFixedSizePoolBuffer(str.c_str(), str.length());
+}

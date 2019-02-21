@@ -10,6 +10,7 @@
 #include "base/Buffer.h"
 #include "base/Gcd.h"
 #include "base/ConcurrentFixedSizeMemoryPool.h"
+#include "base/LogMgr.h"
 
 using namespace grid;
 
@@ -20,6 +21,8 @@ int main(int argc, char* argv[])
         std::cerr << "usage: perf_buffer thread_count alloc_count size_count" << std::endl;
         return 1;
     }
+
+    INIT_LOG_MGR(log::LOG_LEVEL::LOG_DEBUG, log::LOG_WRITER_TYPE::LOG_WRITER_ALL, 1);
     
     uint32_t threadCount = std::atoi(argv[1]);
     uint32_t allocCount = std::atoi(argv[2]);
@@ -56,15 +59,15 @@ int main(int argc, char* argv[])
     for (int i = 0; i < 2; ++i) {
         std::string makerName;
         
-        std::function<Buffer (std::size_t)> maker;
+        std::function<Buffer (uint32_t)> maker;
         if (i == 0) {
-            maker = &BufferFactory::MakeFixedSizePoolBuffer;
+            //maker = (Buffer (BufferFactory::*)(uint32_t))(&BufferFactory::MakeFixedSizePoolBuffer);
             makerName = "BufferFactory::MakeFixedSizePoolBuffer";
         } else if (i == 1) {
-            maker = &BufferFactory::MakeDefaultBuffer;
+            //maker = &BufferFactory::MakeDefaultBuffer;
             makerName = "BufferFactory::MakeDefaultBuffer";
         } else if (i == 2) {
-            maker = &BufferFactory::MakePoolBuffer;
+            //maker = &BufferFactory::MakePoolBuffer;
             makerName = "BufferFactory::MakePoolBuffer";
         }
         
@@ -121,4 +124,6 @@ int main(int argc, char* argv[])
     for (auto gcd : gcds) {
         gcd->Fini();
     }
+
+    UNINIT_LOG_MGR();
 }

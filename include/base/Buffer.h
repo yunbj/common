@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <cstddef>
+#include <string>
 
 
 namespace grid
@@ -100,6 +101,20 @@ namespace grid
         static Buffer MakePoolBuffer(uint32_t n);
         
         static Buffer MakeFixedSizePoolBuffer(uint32_t n);
+
+	public:
+        static Buffer MakeDefaultBuffer(const void* ptr, uint32_t n);
+
+        static Buffer MakePoolBuffer(const void* ptr, uint32_t n);
+
+        static Buffer MakeFixedSizePoolBuffer(const void* ptr, uint32_t n);
+
+	public:
+        static Buffer MakeDefaultBuffer(const std::string& str);
+
+        static Buffer MakePoolBuffer(const std::string& str);
+
+        static Buffer MakeFixedSizePoolBuffer(const std::string& str);
     };//class BufferFactory
 }//namespace grid
 

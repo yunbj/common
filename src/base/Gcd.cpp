@@ -220,7 +220,7 @@ void Gcd::_Impl::_WaitSync(std::unique_lock<MutexType>& lock, bool& comp) {
 }
 
 int Gcd::_Impl::_ThreadFunc() {
-    std::srand(static_cast<uint32_t>(std::time(nullptr)));
+    std::srand(std::hash<std::thread::id>{}(std::this_thread::get_id()));
 
     std::unique_lock<MutexType> lock(_mtxForThread);
 

@@ -247,6 +247,13 @@ Buffer Buffer::Clone() const {
     return Buffer(_data->Make(this->Size()), this->PosToRead(), this->Size());
 }
 
+bool Buffer::operator==(const Buffer& rhs) const {
+    if (this->Size() == rhs.Size() && std::memcmp(this->Data(), rhs.Data(), this->Size()) == 0) {
+        return true;
+    }
+    return false;
+}
+
 Buffer BufferFactory::MakeDefaultBuffer(uint32_t n) {
     return Buffer(std::make_shared<DefaultBufferData>(n));
 }

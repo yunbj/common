@@ -95,6 +95,9 @@ namespace grid
         
         //deep copy
         Buffer Clone() const;
+
+	public:
+        bool operator==(const Buffer& rhs) const;
 	};//class Buffer
 
 

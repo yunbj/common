@@ -61,6 +61,7 @@ bool LogMgr::Init(int level, int type, size_t thrCnt) {
 	std::string localName = util::FileSystem::GetSystemLocaleName();
 	tcout.imbue(std::locale(localName.c_str()));
 
+	_destroyed = false;
 	return true;
 }
 
